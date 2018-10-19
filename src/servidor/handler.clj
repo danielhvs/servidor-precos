@@ -72,5 +72,5 @@
 
 
 (defn -main [& [port]]
-  (let [port 3000]
+  (let [port 5000]
     (jetty/run-jetty (site #'app) {:port port :join? false})))
