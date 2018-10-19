@@ -6,6 +6,7 @@
             [compojure.route :as route]
             [ring.adapter.jetty :as jetty]
             [ring.util.response :as r]
+            [environ.core :refer [env]]
             [ring.middleware.cors :refer [wrap-cors]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]))
 
@@ -72,5 +73,5 @@
 
 
 (defn -main [& [port]]
-  (let [port 5000]
+  (let [port (Integer. (or port (env :port) 3000))]
     (jetty/run-jetty (site #'app) {:port port :join? false})))

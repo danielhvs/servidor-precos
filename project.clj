@@ -6,6 +6,7 @@
                  [compojure "1.6.1"]
                  [ring-cors "0.1.12"]
                  [clojure.java-time "0.3.2"]
+                 [environ "1.0.0"]
                  [org.clojure/data.json "0.2.6"]
                  [ring/ring-jetty-adapter "1.4.0"]
                  [ring/ring-defaults "0.3.2"]]
