@@ -6,6 +6,8 @@
             [compojure.route :as route]
             [ring.adapter.jetty :as jetty]
             [ring.util.response :as r]
+            [monger.core :as mg]
+            [monger.collection :as mc]
             [environ.core :refer [env]]
             [ring.middleware.cors :refer [wrap-cors]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]))
@@ -72,6 +74,11 @@
     :access-control-allow-origin [#".*"])))
 
 
-(defn -main [& [port]]
+#_(defn -main [& [port]]
   (let [port (Integer. (or port (env :port) 3000))]
     (jetty/run-jetty (site #'app) {:port port :join? false})))
+
+(defn -main [& [port]]
+  (let [uri "mongodb://user-mercado:M3rc4d0*@ds237723.mlab.com:37723/mercado" 
+        {:keys [conn db]} (mg/connect-via-uri uri)]
+    (mc/insert-and-return db "documents" {:name "John" :age 30})))

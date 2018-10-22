@@ -5,6 +5,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [compojure "1.6.1"]
                  [ring-cors "0.1.12"]
+                 [com.novemberain/monger "3.1.0"]
                  [clojure.java-time "0.3.2"]
                  [environ "1.0.0"]
                  [org.clojure/data.json "0.2.6"]
@@ -14,6 +15,7 @@
   :hooks [environ.leiningen.hooks]
   :uberjar-name "servidor-0.1.0-SNAPSHOT-standalone.jar"
   :ring {:handler servidor.handler/app}
+  :main ^:skip-aot servidor.handler
   :profiles
   {:production {:env {:production true}} 
    :dev {:dependencies [[javax.servlet/servlet-api "2.5"]
