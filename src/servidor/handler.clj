@@ -15,6 +15,7 @@
 (def produtos (atom []))
 (def mercado (atom #{}))
 
+
 ;; FIXME: manter conectado
 (defn conecta-bd []
   (let [uri "mongodb://user-mercado:M3rc4d0*@ds237723.mlab.com:37723/mercado"] 
@@ -85,6 +86,12 @@
     (wrap-defaults app-routes api-defaults) 
     :access-control-allow-origin [#".*"])))
 
+
+;; init
+(reset! produtos (mc/find-maps (:db (conecta-bd)) "produtos"))
+(reset! mercado (mc/find-maps (:db (conecta-bd)) "mercado"))
+
 (defn -main [& [port]]
   (let [port (Integer. (or port (env :port) 3000))]
     (jetty/run-jetty (site #'app) {:port port :join? false})))
+
