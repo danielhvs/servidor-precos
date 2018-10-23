@@ -28,7 +28,7 @@
       (r/header  "Access-Control-Allow-Origin" "*")))
 
 (defn consulta [produto]
-  (-> (r/response (json/write-str (mc/find (:db (conecta-bd)) "produtos" {:produto produto})))
+  (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "produtos" {:produto produto})))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn salva-mercado [request]
