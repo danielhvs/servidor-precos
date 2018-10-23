@@ -15,7 +15,6 @@
 (def produtos (atom []))
 (def mercado (atom #{}))
 
-
 ;; FIXME: manter conectado
 (defn conecta-bd []
   (let [uri "mongodb://user-mercado:M3rc4d0*@ds237723.mlab.com:37723/mercado"] 
@@ -35,6 +34,7 @@
   (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "produtos" {:produto produto}) :value-fn transforma-id-para-string))
       (r/header "Access-Control-Allow-Origin" "*")))
 
+;; FIXME: update bd (usar id)
 (defn salva-mercado [request]
   (-> (r/response
        (dosync (let [m (json/read-str (slurp (:body request)) :key-fn keyword)]
@@ -44,7 +44,10 @@
 
 (defn update-mercado [p]
   (when-not (some #(= (:produto p) %) (map :produto @mercado)) 
-    (swap! mercado conj {:produto (:produto p) :comprar true})))
+    (let [m {:produto (:produto p) :comprar true}]
+      (do
+        (swap! mercado conj m) 
+        (mc/insert-and-return (:db (conecta-bd)) "mercado" m)))))
 
 (defn cadastra [request]
   (-> (r/response
