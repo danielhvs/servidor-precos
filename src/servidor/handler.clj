@@ -91,10 +91,11 @@
 
 
 ;; init
-(reset! produtos (mc/find-maps (:db (conecta-bd)) "produtos"))
-(reset! mercado (mc/find-maps (:db (conecta-bd)) "mercado"))
+(reset! produtos (map #(assoc % :_id "id") (mc/find-maps (:db (conecta-bd)) "produtos")))
+(reset! mercado (map #(assoc % :_id "id") (mc/find-maps (:db (conecta-bd)) "mercado")))
 
 (defn -main [& [port]]
   (let [port (Integer. (or port (env :port) 3000))]
     (jetty/run-jetty (site #'app) {:port port :join? false})))
 
+; https://mlab.com
