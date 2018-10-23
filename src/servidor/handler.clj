@@ -27,8 +27,11 @@
   (-> (r/response (json/write-str @mercado))
       (r/header  "Access-Control-Allow-Origin" "*")))
 
+(defn transforma-id-para-string [chave valor]
+  (if (= chave :_id) "id" valor))
+
 (defn consulta [produto]
-  (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "produtos" {:produto produto})))
+  (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "produtos" {:produto produto}) :value-fn transforma-id-para-string))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn salva-mercado [request]
