@@ -15,6 +15,11 @@
 (def produtos (atom []))
 (def mercado (atom #{}))
 
+;; FIXME: manter conectado
+(defn conecta-bd []
+  (let [uri "mongodb://user-mercado:M3rc4d0*@ds237723.mlab.com:37723/mercado"] 
+    (mg/connect-via-uri uri)))
+
 (defn filtra-produto [nome colecao] 
   (filter (fn [p] (= nome (:produto p))) colecao))
 
@@ -33,11 +38,16 @@
                  "Salvo com sucesso")))
       (r/header "Access-Control-Allow-Origin" "*")))
 
+(defn update-mercado [p]
+  (when-not (some #(= (:produto p) %) (map :produto @mercado)) 
+    (swap! mercado conj {:produto (:produto p) :comprar true})))
+
 (defn cadastra [request]
   (-> (r/response
        (dosync (let [p (json/read-str (slurp (:body request)) :key-fn keyword)]
                  (swap! produtos conj (assoc p :data (str (t/local-date))))
-                 (when-not (some #(= (:produto p) %) (map :produto @mercado)) (swap! mercado conj {:produto (:produto p) :comprar true}))
+                 (update-mercado p)
+                 (mc/insert-and-return (:db (conecta-bd)) "produtos" p)
                  (json/write-str (or (filtra-produto (:produto p) @produtos) {})))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
@@ -64,8 +74,7 @@
       (println "REQUEST: " request)
       (let [response (handler request)]
         (do (println "RESPONSE: " response)
-            response))
-)))
+            response)))))
 
 (def app
   (wrap-debug
@@ -73,12 +82,6 @@
     (wrap-defaults app-routes api-defaults) 
     :access-control-allow-origin [#".*"])))
 
-
-#_(defn -main [& [port]]
+(defn -main [& [port]]
   (let [port (Integer. (or port (env :port) 3000))]
     (jetty/run-jetty (site #'app) {:port port :join? false})))
-
-(defn -main [& [port]]
-  (let [uri "mongodb://user-mercado:M3rc4d0*@ds237723.mlab.com:37723/mercado" 
-        {:keys [conn db]} (mg/connect-via-uri uri)]
-    (mc/insert-and-return db "documents" {:name "John" :age 30})))
