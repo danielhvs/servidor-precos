@@ -56,8 +56,7 @@
        (dosync (let [p (json/read-str (slurp (:body request)) :key-fn keyword)]
                  #_(swap! produtos conj (assoc p :data (str (t/local-date))))
                  (update-mercado p)
-                 (mc/insert-and-return (:db (conecta-bd)) "produtos" p)
-                 (json/write-str (consulta-produto p)))))
+                 (json/write-str (mc/insert-and-return (:db (conecta-bd)) "produtos" p) :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn opcoes []
