@@ -38,12 +38,20 @@
   (-> (r/response (json/write-str (consulta-produto nome) :value-fn transforma-id-para-string))
       (r/header "Access-Control-Allow-Origin" "*")))
 
+(defn _merge [table-a table-b]
+  (->> (concat table-a table-b)     ;; stat with all the data
+       (sort-by :produto)           ;; split it into groups
+       (partition-by :produto)      ;; by produto
+       (map (partial apply merge))  ;; merge each group into a single map.
+))
+
+
 (defn salva-mercado [request]
   (-> (r/response
        (dosync (let [db (:db (conecta-bd))
                      m (json/read-str (slurp (:body request)) :key-fn keyword)
                      todo-mercado (mc/find-maps db "mercado")
-                     resultado (merge todo-mercado m)]
+                     resultado (_merge todo-mercado m)]
                 (mc/remove db "mercado")
                 (mc/insert-batch "mercado" resultado))))
       (r/header "Access-Control-Allow-Origin" "*")))
