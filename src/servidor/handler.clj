@@ -20,17 +20,16 @@
 (defn filtra-produto [nome colecao] 
   (filter (fn [p] (= nome (:produto p))) colecao))
 
+(defn transforma-id-para-string [chave valor]
+  (if (= chave :_id) "id" valor))
 
 ;; FIXME: definir nomenclatura para servico
 (defn consulta-mercado 
   ([]
-   (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "mercado")))
+   (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "mercado") :value-fn transforma-id-para-string))
        (r/header  "Access-Control-Allow-Origin" "*")))
   ([nome]
    (mc/find-maps (:db (conecta-bd)) "mercado" {:produto nome})))
-
-(defn transforma-id-para-string [chave valor]
-  (if (= chave :_id) "id" valor))
 
 (defn consulta-produto [nome]
   (mc/find-maps (:db (conecta-bd)) "produtos" {:produto nome}))
