@@ -52,8 +52,9 @@
                      m (json/read-str (slurp (:body request)) :key-fn keyword)
                      todo-mercado (mc/find-maps db "mercado")
                      resultado (_merge todo-mercado m)]
-                (mc/remove db "mercado")
-                (mc/insert-batch db "mercado" resultado))))
+                 (mc/remove db "mercado")
+                 (mc/insert-batch db "mercado" resultado)
+                 (json/write-str (mc/find-maps (:db (conecta-bd)) "mercado") :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn update-mercado [p]
