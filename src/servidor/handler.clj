@@ -53,7 +53,7 @@
                      todo-mercado (mc/find-maps db "mercado")
                      resultado (_merge todo-mercado m)]
                 (mc/remove db "mercado")
-                (mc/insert-batch "mercado" resultado))))
+                (mc/insert-batch db "mercado" resultado))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn update-mercado [p]
