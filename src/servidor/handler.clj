@@ -54,9 +54,6 @@
                      todo-mercado (mc/find-maps db "mercado")
                      resultado (_merge todo-mercado m)]
                  (mc/remove db "mercado")
-                 (println "MMMMMMM: " m)
-                 (println "todo-mercado: " todo-mercado)
-                 (println "RESULTADOOOOOOOO: " resultado)
                  (mc/insert-batch db "mercado" resultado)
                  (json/write-str (mc/find-maps (:db (conecta-bd)) "mercado") :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
