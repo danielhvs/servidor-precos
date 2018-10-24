@@ -10,7 +10,9 @@
             [monger.collection :as mc]
             [environ.core :refer [env]]
             [ring.middleware.cors :refer [wrap-cors]]
-            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]))
+            [ring.middleware.defaults :refer [wrap-defaults api-defaults]])
+  (:import org.bson.types.ObjectId)
+)
 
 ;; FIXME: manter conectado
 (defn conecta-bd []
@@ -21,7 +23,7 @@
   (filter (fn [p] (= nome (:produto p))) colecao))
 
 (defn transforma-id-para-string [chave valor]
-  (if (= chave :_id) "id" valor))
+  (if (= chave :_id) (str (ObjectId.)) valor))
 
 ;; FIXME: definir nomenclatura para servico
 (defn consulta-mercado 
@@ -44,7 +46,6 @@
        (partition-by :produto)      ;; by produto
        (map (partial apply merge))  ;; merge each group into a single map.
 ))
-
 
 (defn salva-mercado [request]
   (-> (r/response
