@@ -38,11 +38,14 @@
   (-> (r/response (json/write-str (consulta-produto nome) :value-fn transforma-id-para-string))
       (r/header "Access-Control-Allow-Origin" "*")))
 
-;; FIXME: update bd (usar id)
 (defn salva-mercado [request]
   (-> (r/response
-       (dosync (let [m (json/read-str (slurp (:body request)) :key-fn keyword)]
-                 "FIXME")))
+       (dosync (let [db (:db (conecta-bd))
+                     m (json/read-str (slurp (:body request)) :key-fn keyword)
+                     todo-mercado (mc/find-maps db "mercado")
+                     resultado (merge todo-mercado m)]
+                (mc/remove db "mercado")
+                (mc/insert-batch "mercado" resultado))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn update-mercado [p]
