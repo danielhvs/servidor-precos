@@ -63,11 +63,10 @@
     (let [m {:produto (:produto p) :comprar true}]
       (mc/insert (:db (conecta-bd)) "mercado" m))))
 
-;; FIXME: adicionar data no bd
 (defn cadastra [request]
   (-> (r/response
-       (dosync (let [p (json/read-str (slurp (:body request)) :key-fn keyword)]
-                 #_(swap! produtos conj (assoc p :data (str (t/local-date))))
+       (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword)
+                     p (assoc p-request :data (str (t/local-date)))]
                  (update-mercado p)
                  (json/write-str (mc/insert-and-return (:db (conecta-bd)) "produtos" p) :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
