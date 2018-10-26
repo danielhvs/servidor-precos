@@ -1,0 +1,17 @@
+[{:produto farinha-trigo :qtd 0}
+ {:produto feijao :qtd 1}
+ {:produto arroz :qtd 1}
+ {:produto fermento :qtd 2}
+ {:produto acucar-refinado :qtd 1}
+ {:produto acucar-mascavo :qtd 0}
+ {:produto leite-condensado :qtd 6}
+ {:produto creme-de-leite caixa :qtd 5}
+ {:produto creme-de-leite lata :qtd 0}
+ {:produto sal :qtd 0}
+ {:produto farelo-de-aveia :qtd 3}
+ {:produto aveia-em-flocos :qtd 0}
+ {:produto cafe :qtd 1}
+ {:produto massas :qtd 0}
+ {:produto pipoca :qtd 0}
+ {:produto atum :qtd 0}
+]
