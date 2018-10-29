@@ -14,4 +14,6 @@
  {:produto massas :qtd 0}
  {:produto pipoca :qtd 0}
  {:produto atum :qtd 0}
+ {:produto leite :qtd 1}
+ {:produto queijo-ralado :qtd 1}
 ]
