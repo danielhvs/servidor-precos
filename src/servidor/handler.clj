@@ -20,7 +20,7 @@
     (mg/connect-via-uri uri)))
 
 (defn filtra-produto [nome colecao] 
-  (filter (fn [p] (= nome (:produto p))) colecao))
+  (filter (fn [p] (= nome (:nome p))) colecao))
 
 (defn transforma-id-para-string [chave valor]
   (if (= chave :_id) (str (ObjectId.)) valor))
@@ -31,10 +31,10 @@
    (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "mercado") :value-fn transforma-id-para-string))
        (r/header  "Access-Control-Allow-Origin" "*")))
   ([nome]
-   (mc/find-maps (:db (conecta-bd)) "mercado" {:produto nome})))
+   (mc/find-maps (:db (conecta-bd)) "mercado" {:nome nome})))
 
 (defn consulta-produto [nome]
-  (mc/find-maps (:db (conecta-bd)) "produtos" {:produto nome}))
+  (mc/find-maps (:db (conecta-bd)) "produtos" {:nome nome}))
 
 (defn consulta [nome]
   (-> (r/response (json/write-str (consulta-produto nome) :value-fn transforma-id-para-string))
@@ -42,8 +42,8 @@
 
 (defn _merge [table-a table-b]
   (->> (concat table-a table-b)     ;; stat with all the data
-       (sort-by :produto)           ;; split it into groups
-       (partition-by :produto)      ;; by produto
+       (sort-by :nome)           ;; split it into groups
+       (partition-by :nome)      ;; by produto
        (map (partial apply merge))  ;; merge each group into a single map.
 ))
 
@@ -59,8 +59,8 @@
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn update-mercado [p]
-  (when (empty? (consulta-mercado (:produto p)))  
-    (let [m {:produto (:produto p) :comprar true :estoque 0}]
+  (when (empty? (consulta-mercado (:nome p)))  
+    (let [m {:nome (:nome p) :comprar true :estoque 0}]
       (mc/insert (:db (conecta-bd)) "mercado" m))))
 
 (defn cadastra [request]
@@ -80,7 +80,7 @@
 
 (defroutes app-routes
   (GET "/" [] "Hello World")
-  (GET "/consulta/:produto" [produto] (consulta produto))
+  (GET "/consulta/:nome" [nome] (consulta nome))
   (GET "/consulta-mercado" [] (consulta-mercado))
   (POST "/cadastra" request (cadastra request))
   (POST "/salva-mercado" request (salva-mercado request))
