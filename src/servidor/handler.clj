@@ -60,7 +60,7 @@
 
 (defn update-mercado [p]
   (when (empty? (consulta-mercado (:produto p)))  
-    (let [m {:produto (:produto p) :comprar true}]
+    (let [m {:produto (:produto p) :comprar true :estoque 0}]
       (mc/insert (:db (conecta-bd)) "mercado" m))))
 
 (defn cadastra [request]
