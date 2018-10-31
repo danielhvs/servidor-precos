@@ -55,7 +55,7 @@
                      resultado (_merge todo-mercado m)]
                  (mc/remove db "mercado")
                  (mc/insert-batch db "mercado" resultado)
-                 (json/write-str (mc/find-maps (:db (conecta-bd)) "mercado") :value-fn transforma-id-para-string))))
+                 (json/write-str (mc/find-maps db "mercado") :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn update-mercado [p]
