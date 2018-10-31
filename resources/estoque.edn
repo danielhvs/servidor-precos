@@ -1,19 +1,16 @@
-[{:produto farinha-trigo :qtd 0}
- {:produto feijao :qtd 1}
- {:produto arroz :qtd 1}
- {:produto fermento :qtd 2}
- {:produto acucar-refinado :qtd 1}
- {:produto acucar-mascavo :qtd 0}
- {:produto leite-condensado :qtd 6}
- {:produto creme-de-leite caixa :qtd 5}
- {:produto creme-de-leite lata :qtd 0}
- {:produto sal :qtd 0}
- {:produto farelo-de-aveia :qtd 3}
- {:produto aveia-em-flocos :qtd 0}
- {:produto cafe :qtd 1}
- {:produto massas :qtd 0}
- {:produto pipoca :qtd 0}
- {:produto atum :qtd 0}
- {:produto leite :qtd 1}
- {:produto queijo-ralado :qtd 1}
-]
+{"nome": "farinha-trigo", "local": "nenhum", "preco": 0}
+{"nome": "feijao", "local": "nenhum", "preco": 0}
+{"nome": "arroz", "local": "nenhum", "preco": 0}
+{"nome": "fermento", "local": "nenhum", "preco": 0}
+{"nome": "acucar-refinado", "local": "nenhum", "preco": 0}
+{"nome": "acucar-mascavo", "local": "nenhum", "preco": 0}
+{"nome": "leite-condensado", "local": "nenhum", "preco": 0}
+{"nome": "creme-de-leite-caixa" "local": "nenhum", "preco": 0}
+{"nome": "creme-de-leite-lata" "local": "nenhum", "preco": 0}
+{"nome": "sal", "local": "nenhum", "preco": 0}
+{"nome": "farelo-de-aveia", "local": "nenhum", "preco": 0}
+{"nome": "aveia-em-flocos", "local": "nenhum", "preco": 0}
+{"nome": "cafe", "local": "nenhum", "preco": 0}
+{"nome": "massas", "local": "nenhum", "preco": 0}
+{"nome": "pipoca", "local": "nenhum", "preco": 0}
+{"nome": "atum", "local": "nenhum", "preco": 0}
