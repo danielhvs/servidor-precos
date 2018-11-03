@@ -9,6 +9,7 @@
             [monger.core :as mg]
             [monger.collection :as mc]
             [environ.core :refer [env]]
+            [monger.operators :refer :all]
             [ring.middleware.cors :refer [wrap-cors]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]])
   (:import org.bson.types.ObjectId)
@@ -23,15 +24,21 @@
   (mc/find-maps db "produtos" query))
 
 (defn db-consulta-mercado [db nome]
-  (mc/find-maps (:db (conecta-bd)) "mercado" {:nome nome}))
+  (mc/find-maps db "mercado" {:nome nome}))
 
 (defn db-remove-tudo [db nome]
   (mc/remove db nome))
 
-(defn update-mercado [db p]
-  (when (empty? (db-consulta-mercado db (:nome p)))  
-    (let [m {:nome (:nome p) :comprar true :estoque 0}]
-      (mc/insert (:db (conecta-bd)) "mercado" m))))
+(defn update-mercado [db {:keys [nome preco local data]}]
+  (let [m-banco (db-consulta-mercado db nome)]  
+    (if (empty? m-banco)
+        (let [m {:nome nome :comprar true :estoque 0 :preco preco :local local :data data}]
+          (mc/insert (:db (conecta-bd)) "mercado" m))
+        (let [mais-barato (if (< preco (:preco (first m-banco))) 
+                            {:preco preco :local local :data data} 
+                            (first m-banco))
+              m {:preco (:preco mais-barato) :local (:local mais-barato) :data (:data mais-barato)}]
+          (mc/update-by-id db "mercado" (:_id (first m-banco)) {$set m})))))
 
 ;; Utils
 (defn _merge [table-a table-b]
@@ -46,6 +53,9 @@
 
 (defn transforma-id-para-string [chave valor]
   (if (= chave :_id) (str (ObjectId.)) valor))
+
+(defn transforma-preco [chave valor]
+  (if (= chave :preco) (Float/valueOf valor) valor))
 
 ;; Servicos
 (defn consulta-mercado []
@@ -82,7 +92,7 @@
 
 (defn cadastra [request]
   (-> (r/response
-       (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword)
+       (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-preco)
                      p (assoc p-request :data (str (t/local-date)))
                      db (:db (conecta-bd))]
                  (update-mercado db p)
