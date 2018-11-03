@@ -14,10 +14,29 @@
   (:import org.bson.types.ObjectId)
 )
 
-;; FIXME: manter conectado
+;; Banco
 (defn conecta-bd []
   (let [uri "mongodb://user-mercado:M3rc4d0*@ds237723.mlab.com:37723/mercado"] 
     (mg/connect-via-uri uri)))
+
+(defn db-consulta-produto [db query]
+  (mc/find-maps db "produtos" query))
+
+(defn db-consulta-mercado [db nome]
+  (mc/find-maps (:db (conecta-bd)) "mercado" {:nome nome}))
+
+(defn update-mercado [db p]
+  (when (empty? (db-consulta-mercado db (:nome p)))  
+    (let [m {:nome (:nome p) :comprar true :estoque 0}]
+      (mc/insert (:db (conecta-bd)) "mercado" m))))
+
+;; Utils
+(defn _merge [table-a table-b]
+  (->> (concat table-a table-b)  ;; stat with all the data
+       (sort-by :nome)           ;; split it into groups
+       (partition-by :nome)      ;; by produto
+       (map (partial apply merge))  ;; merge each group into a single map.
+))
 
 (defn filtra-produto [nome colecao] 
   (filter (fn [p] (= nome (:nome p))) colecao))
@@ -25,27 +44,20 @@
 (defn transforma-id-para-string [chave valor]
   (if (= chave :_id) (str (ObjectId.)) valor))
 
-;; FIXME: definir nomenclatura para servico
-(defn consulta-mercado 
-  ([]
-   (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "mercado") :value-fn transforma-id-para-string))
-       (r/header  "Access-Control-Allow-Origin" "*")))
-  ([nome]
-   (mc/find-maps (:db (conecta-bd)) "mercado" {:nome nome})))
-
-(defn consulta-produto [nome]
-  (mc/find-maps (:db (conecta-bd)) "produtos" {:nome nome}))
+;; Servicos
+(defn consulta-mercado []
+  (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "mercado") :value-fn transforma-id-para-string))
+      (r/header  "Access-Control-Allow-Origin" "*")))
 
 (defn consulta [nome]
-  (-> (r/response (json/write-str (consulta-produto nome) :value-fn transforma-id-para-string))
-      (r/header "Access-Control-Allow-Origin" "*")))
+  (let [db (:db (conecta-bd))]
+    (-> (r/response (json/write-str (db-consulta-produto db {:nome nome}) :value-fn transforma-id-para-string))
+        (r/header "Access-Control-Allow-Origin" "*"))))
 
-(defn _merge [table-a table-b]
-  (->> (concat table-a table-b)     ;; stat with all the data
-       (sort-by :nome)           ;; split it into groups
-       (partition-by :nome)      ;; by produto
-       (map (partial apply merge))  ;; merge each group into a single map.
-))
+(defn consulta-produtos []
+  (let [db (:db (conecta-bd))]
+    (-> (r/response (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))
+        (r/header "Access-Control-Allow-Origin" "*"))))
 
 (defn salva-mercado [request]
   (-> (r/response
@@ -58,17 +70,13 @@
                  (json/write-str (mc/find-maps db "mercado") :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
-(defn update-mercado [p]
-  (when (empty? (consulta-mercado (:nome p)))  
-    (let [m {:nome (:nome p) :comprar true :estoque 0}]
-      (mc/insert (:db (conecta-bd)) "mercado" m))))
-
 (defn cadastra [request]
   (-> (r/response
        (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword)
-                     p (assoc p-request :data (str (t/local-date)))]
-                 (update-mercado p)
-                 (json/write-str (mc/insert-and-return (:db (conecta-bd)) "produtos" p) :value-fn transforma-id-para-string))))
+                     p (assoc p-request :data (str (t/local-date)))
+                     db (:db (conecta-bd))]
+                 (update-mercado db p)
+                 (json/write-str (mc/insert-and-return db "produtos" p) :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn opcoes []
@@ -78,9 +86,11 @@
       (r/header "Access-Control-Allow-Methods" "POST")
       (r/header "Access-Control-Allow-Headers" "content-type")))
 
+;; Rotas
 (defroutes app-routes
   (GET "/" [] "Hello World")
   (GET "/consulta/:nome" [nome] (consulta nome))
+  (GET "/consulta" [] (consulta-produtos))
   (GET "/consulta-mercado" [] (consulta-mercado))
   (POST "/cadastra" request (cadastra request))
   (POST "/salva-mercado" request (salva-mercado request))
