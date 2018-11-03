@@ -112,11 +112,12 @@
 
 (defn boot-cadastra [request]
   (-> (r/response
-       (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-preco)
-                     p (assoc p-request :data (str (t/local-date)))
+       (dosync (let [todos-produtos (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-preco)
+                     tudo (map #(assoc % :data (str (t/local-date))) todos-produtos)
                      db (:db (conecta-bd))]
-                 (update-mercado db p)
-                 (json/write-str (mc/insert-and-return db "produtos" p) :value-fn transforma-id-para-string))))
+                 (doall (map #(update-mercado db %) tudo))
+                 (mc/insert-batch db "produtos" tudo)
+                 (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn opcoes []

@@ -1,3 +1,4 @@
+[
 {"nome": "farinha-trigo", "local": "nenhum", "preco": "9999999"}
 {"nome": "feijao", "local": "nenhum", "preco": "9999999"}
 {"nome": "arroz", "local": "nenhum", "preco": "9999999"}
@@ -34,3 +35,4 @@
 {"nome": "queijo-mussarela", "local": "bistek", "preco": "25.97"}
 {"nome": "queijo-prato", "local": "bistek", "preco": "27.97"}
 {"nome": "papel-higienico", "local": "bistek", "preco": "19.90"}
+]
