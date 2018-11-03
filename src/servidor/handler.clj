@@ -25,6 +25,9 @@
 (defn db-consulta-mercado [db nome]
   (mc/find-maps (:db (conecta-bd)) "mercado" {:nome nome}))
 
+(defn db-remove-tudo [db nome]
+  (mc/remove db nome))
+
 (defn update-mercado [db p]
   (when (empty? (db-consulta-mercado db (:nome p)))  
     (let [m {:nome (:nome p) :comprar true :estoque 0}]
@@ -57,6 +60,13 @@
 (defn consulta-produtos []
   (let [db (:db (conecta-bd))]
     (-> (r/response (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))
+        (r/header "Access-Control-Allow-Origin" "*"))))
+
+(defn remove-tudo []
+  (let [db (:db (conecta-bd))]
+    (db-remove-tudo db "mercado")
+    (db-remove-tudo db "produtos")
+    (-> (r/response "Removido")
         (r/header "Access-Control-Allow-Origin" "*"))))
 
 (defn salva-mercado [request]
@@ -92,6 +102,7 @@
   (GET "/consulta/:nome" [nome] (consulta nome))
   (GET "/consulta" [] (consulta-produtos))
   (GET "/consulta-mercado" [] (consulta-mercado))
+  (POST "/remove-tudo" [] (remove-tudo))
   (POST "/cadastra" request (cadastra request))
   (POST "/salva-mercado" request (salva-mercado request))
   (OPTIONS "/cadastra" request (opcoes))
