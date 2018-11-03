@@ -90,7 +90,27 @@
                  (json/write-str (mc/find-maps db "mercado") :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
+(defn boot-mercado [request]
+  (-> (r/response
+       (dosync (let [db (:db (conecta-bd))
+                     todo-mercado (json/read-str (slurp (:body request)) :key-fn keyword)
+                     tudo (map #(assoc % :local "nenhum" :preco 99999999) todo-mercado)]
+                 (mc/remove db "mercado")
+                 (mc/insert-batch db "mercado" tudo)
+                 (json/write-str (mc/find-maps db "mercado") :value-fn transforma-id-para-string))))
+      (r/header "Access-Control-Allow-Origin" "*")))
+
+
 (defn cadastra [request]
+  (-> (r/response
+       (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-preco)
+                     p (assoc p-request :data (str (t/local-date)))
+                     db (:db (conecta-bd))]
+                 (update-mercado db p)
+                 (json/write-str (mc/insert-and-return db "produtos" p) :value-fn transforma-id-para-string))))
+      (r/header "Access-Control-Allow-Origin" "*")))
+
+(defn boot-cadastra [request]
   (-> (r/response
        (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-preco)
                      p (assoc p-request :data (str (t/local-date)))
@@ -114,8 +134,12 @@
   (GET "/consulta-mercado" [] (consulta-mercado))
   (POST "/remove-tudo" [] (remove-tudo))
   (POST "/cadastra" request (cadastra request))
+  (POST "/boot-cadastra" request (boot-cadastra request))
+  (POST "/boot-mercado" request (boot-mercado request))
   (POST "/salva-mercado" request (salva-mercado request))
   (OPTIONS "/cadastra" request (opcoes))
+  (OPTIONS "/boot-cadastra" request (opcoes))
+  (OPTIONS "/boot-mercado" request (opcoes))
   (OPTIONS "/salva-mercado" request (opcoes))
   (route/not-found "Not Found"))
 

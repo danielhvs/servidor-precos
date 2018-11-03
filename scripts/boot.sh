@@ -1,11 +1,19 @@
 #!/bin/bash
-filename="$1"
-echo $filename
+filename="../resources/mercado-boot.json"
+filename2="../resources/produtos-boot.json"
+echo boot-mercado: $filename
+echo boot-produtos: $filename2
 echo "OK"?
 read
-while read -r line
-do
-    json=$line
-    curl  --header "Content-Type: application/json" --data "$json" --request POST http://localhost:3000/cadastra
-    #curl  --header "Content-Type: application/json" --data "$json" --request POST https://infinite-crag-89428.herokuapp.com/cadastra
-done < "$filename"
+
+echo "Removendo tudo..."
+echo
+./remove.sh
+echo
+echo "Boot mercado..."
+echo
+./boot-mercado.sh $filename
+echo
+echo "Boot produtos..."
+echo
+./boot-produtos.sh $filename2
