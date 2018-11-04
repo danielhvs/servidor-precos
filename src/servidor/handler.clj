@@ -2,6 +2,7 @@
   (:require [compojure.core :refer :all]
             [compojure.handler :refer [site]]
             [clojure.data.json :as json]
+            [clojure.string :as string]
             [java-time :as t]
             [compojure.route :as route]
             [ring.adapter.jetty :as jetty]
@@ -41,6 +42,14 @@
           (mc/update-by-id db "mercado" (:_id (first m-banco)) {$set m})))))
 
 ;; Utils
+(defn normaliza [nome]
+  "Faz kebab-case e remove 'de'"
+  (let [palavras
+        (filter #(and (not= % "de") 
+                      (not (empty? %)))
+                (map string/lower-case (string/split nome #" ")))]
+    (reduce #(str %1 "-" %2) palavras)))
+
 (defn _merge [table-a table-b]
   (->> (concat table-a table-b)  ;; stat with all the data
        (sort-by :nome)           ;; split it into groups
@@ -56,6 +65,12 @@
 
 (defn transforma-preco [chave valor]
   (if (= chave :preco) (Float/valueOf valor) valor))
+
+(defn transforma-valor-request [chave valor]
+  (cond 
+   (= chave :preco) (Float/valueOf valor) 
+   (= chave :nome) (normaliza valor) 
+   :else valor))
 
 ;; Servicos
 (defn consulta-mercado []
@@ -103,7 +118,7 @@
 
 (defn cadastra [request]
   (-> (r/response
-       (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-preco)
+       (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-valor-request)
                      p (assoc p-request :data (str (t/local-date)))
                      db (:db (conecta-bd))]
                  (update-mercado db p)
