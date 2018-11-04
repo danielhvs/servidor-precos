@@ -8,6 +8,6 @@ while true; do
     read nome
     echo preco:
     read preco
-    echo {\"nome\": \"$nome\", \"local\": \"$local\", \"preco\": \"$preco\"} >> ../resources/estoque.edn
+    echo {\"nome\": \"$nome\", \"local\": \"$local\", \"preco\": \"$preco\"} >> ../resources/produtos-boot.json
 done
 
