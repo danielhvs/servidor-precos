@@ -1,8 +1,8 @@
 #!/bin/bash
 filename="../resources/mercado-boot.json"
-filename2="../resources/produtos-boot.json"
+produtos=`ls ../resources/produtos-*.json`
 echo boot-mercado: $filename
-echo boot-produtos: $filename2
+echo boot-produtos: $produtos
 echo "OK"?
 read
 
@@ -13,7 +13,10 @@ echo
 echo "Boot mercado..."
 echo
 ./boot-mercado.sh $filename
-echo
-echo "Boot produtos..."
-echo
-./boot-produtos.sh $filename2
+
+for f in $produtos; do
+	echo
+	echo "Boot produtos $f ..."
+	echo
+	./boot-produtos.sh $f
+done

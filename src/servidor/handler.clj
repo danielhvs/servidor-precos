@@ -42,6 +42,9 @@
           (mc/update-by-id db "mercado" (:_id (first m-banco)) {$set m})))))
 
 ;; Utils
+(defn parse-request-cadastro [json]
+  (json/read-str (slurp json) :key-fn keyword :value-fn transforma-valor-request))
+
 (defn normaliza [nome]
   "Faz kebab-case e remove 'de'"
   (let [palavras
@@ -112,15 +115,13 @@
        (dosync (let [db (:db (conecta-bd))
                      todo-mercado (json/read-str (slurp (:body request)) :key-fn keyword)
                      tudo (map #(assoc % :local "nenhum" :preco 99999999) todo-mercado)]
-                 (mc/remove db "mercado")
                  (mc/insert-batch db "mercado" tudo)
                  (json/write-str (mc/find-maps db "mercado") :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
-
 (defn cadastra [request]
   (-> (r/response
-       (dosync (let [p-request (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-valor-request)
+       (dosync (let [p-request (parse-request-cadastro (:body request))
                      p (assoc p-request :data (str (t/local-date)))
                      db (:db (conecta-bd))]
                  (update-mercado db p)
@@ -129,7 +130,7 @@
 
 (defn boot-cadastra [request]
   (-> (r/response
-       (dosync (let [todos-produtos (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-preco)
+       (dosync (let [todos-produtos (parse-request-cadastro (:body request))
                      tudo (map #(assoc % :data (str (t/local-date))) todos-produtos)
                      db (:db (conecta-bd))]
                  (doall (map #(update-mercado db %) tudo))
