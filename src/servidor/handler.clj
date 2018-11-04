@@ -45,10 +45,12 @@
 (defn normaliza [nome]
   "Faz kebab-case e remove 'de'"
   (let [palavras
-        (filter #(and (not= % "de") 
-                      (not (empty? %)))
+        (filter #(and (not (empty? %)))
                 (map string/lower-case (string/split nome #" ")))]
-    (reduce #(str %1 "-" %2) palavras)))
+    (string/replace 
+     (reduce #(str %1 "-" %2) palavras)
+     #"-de-"
+     "-")))
 
 (defn _merge [table-a table-b]
   (->> (concat table-a table-b)  ;; stat with all the data
