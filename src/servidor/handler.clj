@@ -42,9 +42,6 @@
           (mc/update-by-id db "mercado" (:_id (first m-banco)) {$set m})))))
 
 ;; Utils
-(defn parse-request-cadastro [json]
-  (json/read-str (slurp json) :key-fn keyword :value-fn transforma-valor-request))
-
 (defn normaliza [nome]
   "Faz kebab-case e remove 'de'"
   (let [palavras
@@ -54,6 +51,15 @@
      (reduce #(str %1 "-" %2) palavras)
      #"-de-"
      "-")))
+
+(defn transforma-valor-request [chave valor]
+  (cond 
+   (= chave :preco) (Float/valueOf valor) 
+   (= chave :nome) (normaliza valor) 
+   :else valor))
+
+(defn parse-request-cadastro [json]
+  (json/read-str (slurp json) :key-fn keyword :value-fn transforma-valor-request))
 
 (defn _merge [table-a table-b]
   (->> (concat table-a table-b)  ;; stat with all the data
@@ -71,11 +77,7 @@
 (defn transforma-preco [chave valor]
   (if (= chave :preco) (Float/valueOf valor) valor))
 
-(defn transforma-valor-request [chave valor]
-  (cond 
-   (= chave :preco) (Float/valueOf valor) 
-   (= chave :nome) (normaliza valor) 
-   :else valor))
+
 
 ;; Servicos
 (defn consulta-mercado []
