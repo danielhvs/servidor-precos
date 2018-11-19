@@ -116,7 +116,7 @@
   (-> (r/response
        (dosync (let [db (:db (conecta-bd))
                      todo-mercado (json/read-str (slurp (:body request)) :key-fn keyword)
-                     tudo (map #(assoc % :local "nenhum" :preco 99999999) todo-mercado)]
+                     tudo (map #(assoc % :local "nenhum" :preco 99999999 :nome (normaliza (:nome %))) todo-mercado)]
                  (mc/insert-batch db "mercado" tudo)
                  (json/write-str (mc/find-maps db "mercado") :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
@@ -132,7 +132,9 @@
 
 (defn boot-cadastra [request]
   (-> (r/response
-       (dosync (let [todos-produtos (parse-request-cadastro (:body request))
+       (dosync (let [todos-produtos (map (fn [{:keys [nome preco] :as produto}]
+                                           (assoc produto :nome (normaliza nome) :preco (Float/valueOf preco))) 
+                                         (parse-request-cadastro (:body request)))
                      tudo (map #(assoc % :data (str (t/local-date))) todos-produtos)
                      db (:db (conecta-bd))]
                  (doall (map #(update-mercado db %) tudo))
