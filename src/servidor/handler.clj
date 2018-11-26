@@ -3,6 +3,7 @@
             [compojure.handler :refer [site]]
             [clojure.data.json :as json]
             [clojure.string :as string]
+            [hiccup.page :refer [include-js include-css html5]]
             [java-time :as t]
             [compojure.route :as route]
             [ring.adapter.jetty :as jetty]
@@ -15,6 +16,18 @@
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]])
   (:import org.bson.types.ObjectId)
 )
+
+(defn head []
+  [:head
+   [:meta {:charset "utf-8"}]
+   [:meta {:name "viewport"
+           :content "width=device-width, initial-scale=1"}]])
+
+(defn pagina [conteudo]
+  (html5
+    (head)
+    [:body
+     [:div conteudo]]))
 
 ;; Banco
 (defn conecta-bd []
@@ -79,6 +92,14 @@
 
 (def amigos (atom [{:nome "daniel"} {:nome "robson"} {:nome "fabiana"} {:nome "norvan"} {:nome "pablo"} {:nome "joao"} {:nome "solange"}]))
 
+(def senhas {"Wo7w", "daniel"
+             "U3rN", "robson"
+             "KjOH", "fabiana"
+             "OSxJ", "norvan"
+             "dAN1", "pablo"
+             "B6no", "joao"
+             "gmx7", "solange"})
+
 (defn executa [coll]
   (let [embaralhado (shuffle coll)]
     (map-indexed (fn [i p] (assoc p :amigo (:nome (nth 
@@ -88,23 +109,27 @@
                                                      0 
                                                      (inc i)))))) embaralhado)))
 (defonce resultado (atom []))
-
-@resultado
-(map #(str (:nome %) "->" (:amigo %)) @resultado)
-
+(defonce fez (atom []))
+(defonce contador (atom 15))
 
 ;; Servicos
 (defn consulta-mercado []
-  (-> (r/response (dosync 
-                   (reset! resultado (executa @amigos))
-                   "Sorteado!"))
-      (r/header  "Access-Control-Allow-Origin" "*")))
+  (cond (> @contador 0) 
+    (dosync 
+     (swap! contador dec)
+     (pagina (reduce #(str %1 " -> " %2) (executa @amigos))))
+    (= @contador 0)
+    (dosync 
+     (reset! resultado (executa @amigos))
+     (swap! contador dec)
+     (pagina "Resultado gerado."))
+    :else
+    (pagina "Pronto")))
 
-(defn consulta [nome]
-  (let [db (:db (conecta-bd))]
-    (-> (r/response (json/write-str (filter #(= (:nome %) nome) @resultado)))
-        (r/header "Access-Control-Allow-Origin" "*"))))
+(defn consulta [senha]
+  (pagina (str (first (filter #(= (:nome %) (get senhas senha)) @resultado)))))
 
+#_(json/write-str (filter #(= (:nome %) nome) @resultado))
 (defn consulta-produtos []
   (let [db (:db (conecta-bd))]
     (-> (r/response @resultado)
