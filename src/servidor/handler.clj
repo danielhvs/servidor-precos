@@ -77,21 +77,37 @@
 (defn transforma-preco [chave valor]
   (if (= chave :preco) (Float/valueOf valor) valor))
 
+(def amigos (atom [{:nome "daniel"} {:nome "robson"} {:nome "fabiana"} {:nome "norvan"} {:nome "pablo"} {:nome "joao"} {:nome "solange"}]))
+
+(defn executa [coll]
+  (let [embaralhado (shuffle coll)]
+    (map-indexed (fn [i p] (assoc p :amigo (:nome (nth 
+                                                   embaralhado
+                                                   (if 
+                                                       (= i (dec (count embaralhado))) 
+                                                     0 
+                                                     (inc i)))))) embaralhado)))
+(defonce resultado (atom []))
+
+@resultado
+(map #(str (:nome %) "->" (:amigo %)) @resultado)
 
 
 ;; Servicos
 (defn consulta-mercado []
-  (-> (r/response (json/write-str (mc/find-maps (:db (conecta-bd)) "mercado") :value-fn transforma-id-para-string))
+  (-> (r/response (dosync 
+                   (reset! resultado (executa @amigos))
+                   "Sorteado!"))
       (r/header  "Access-Control-Allow-Origin" "*")))
 
 (defn consulta [nome]
   (let [db (:db (conecta-bd))]
-    (-> (r/response (json/write-str (db-consulta-produto db {:nome nome}) :value-fn transforma-id-para-string))
+    (-> (r/response (json/write-str (filter #(= (:nome %) nome) @resultado)))
         (r/header "Access-Control-Allow-Origin" "*"))))
 
 (defn consulta-produtos []
   (let [db (:db (conecta-bd))]
-    (-> (r/response (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))
+    (-> (r/response @resultado)
         (r/header "Access-Control-Allow-Origin" "*"))))
 
 (defn remove-tudo []
