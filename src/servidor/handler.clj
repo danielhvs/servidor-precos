@@ -154,17 +154,19 @@
                       :morangos [{:id 1 :preco 1 :uri "/produtos/morangos/1"} {:id 2 :preco 2 :uri "/produtos/morangos/2"}]
 })
 
+(defn get-produtos-nome [nome]
+  ((keyword nome) todos-produtos))
+
 (defn produtos []
   (-> (r/response (json/write-str todos-produtos))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn produtos-nome [nome]
-  (-> (r/response (json/write-str ((keyword nome) todos-produtos)))
+  (-> (r/response (json/write-str (get-produtos-nome nome)))
       (r/header "Access-Control-Allow-Origin" "*")))
 
-;; FIXME nao esta funcionando ainda
 (defn produtos-nome-id [nome id]
-  (-> (r/response (json/write-str (dosync (first (filter #(= (:id %) id) (map identity ((keyword nome) todos-produtos)))))))
+  (-> (r/response (json/write-str (first (filter #(= (:id %) (read-string id)) (get-produtos-nome nome)))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 ;; Rotas
