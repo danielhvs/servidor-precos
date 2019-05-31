@@ -150,8 +150,8 @@
       (r/header "Access-Control-Allow-Headers" "content-type")))
 
 (def todos-produtos {
-                      :bananas [{:id 1 :preco 1 :uri "/produtos/bananas/1"} {:id 2 :preco 2 :uri "/produtos/bananas/2"}]
-                      :morangos [{:id 1 :preco 1 :uri "/produtos/morangos/1"} {:id 2 :preco 2 :uri "/produtos/morangos/2"}]
+                     :bananas [{:id 1 :preco 1} {:id 2 :preco 2 }]
+                     :morangos [{:id 1 :preco 1} {:id 2 :preco 2}]
 })
 
 (defn get-produtos-nome [nome]
@@ -169,12 +169,16 @@
   (-> (r/response (json/write-str (first (filter #(= (:id %) (read-string id)) (get-produtos-nome nome)))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
+(defn insert-produtos [nome id]
+  (-> (r/response (json/write-str {:ok "sim"}))
+      (r/header "Access-Control-Allow-Origin" "*")))
+
 ;; Rotas
 (defroutes app-routes
-  (GET "/" [] "Hello World")
   (GET "/produtos" [] (produtos))
   (GET "/produtos/:nome" [nome] (produtos-nome nome))
   (GET "/produtos/:nome/:id" [nome id] (produtos-nome-id nome id))
+  (POST "/produtos/:nome" [nome dados] (insert-produtos nome dados))
   (GET "/consulta/:nome" [nome] (consulta nome))
   (GET "/consulta" [] (consulta-produtos))
   (GET "/consulta-mercado" [] (consulta-mercado))
