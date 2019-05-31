@@ -149,9 +149,30 @@
       (r/header "Access-Control-Allow-Methods" "POST")
       (r/header "Access-Control-Allow-Headers" "content-type")))
 
+(def todos-produtos {
+                      :bananas [{:id 1 :preco 1 :uri "/produtos/bananas/1"} {:id 2 :preco 2 :uri "/produtos/bananas/2"}]
+                      :morangos [{:id 1 :preco 1 :uri "/produtos/morangos/1"} {:id 2 :preco 2 :uri "/produtos/morangos/2"}]
+})
+
+(defn produtos []
+  (-> (r/response (json/write-str todos-produtos))
+      (r/header "Access-Control-Allow-Origin" "*")))
+
+(defn produtos-nome [nome]
+  (-> (r/response (json/write-str ((keyword nome) todos-produtos)))
+      (r/header "Access-Control-Allow-Origin" "*")))
+
+;; FIXME nao esta funcionando ainda
+(defn produtos-nome-id [nome id]
+  (-> (r/response (json/write-str (dosync (first (filter #(= (:id %) id) (map identity ((keyword nome) todos-produtos)))))))
+      (r/header "Access-Control-Allow-Origin" "*")))
+
 ;; Rotas
 (defroutes app-routes
   (GET "/" [] "Hello World")
+  (GET "/produtos" [] (produtos))
+  (GET "/produtos/:nome" [nome] (produtos-nome nome))
+  (GET "/produtos/:nome/:id" [nome id] (produtos-nome-id nome id))
   (GET "/consulta/:nome" [nome] (consulta nome))
   (GET "/consulta" [] (consulta-produtos))
   (GET "/consulta-mercado" [] (consulta-mercado))
