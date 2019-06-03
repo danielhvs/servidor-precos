@@ -150,9 +150,9 @@
       (r/header "Access-Control-Allow-Headers" "content-type")))
 
 (def todos-produtos (atom {
-                           :banana {:obs "" :historico [{:id 1 :preco 1} {:id 2 :preco 2 }]}
-                           :morango {:obs "" :historico [{:id 1 :preco 1} {:id 2 :preco 2}]}
-}))
+                           :banana {:obs "banana-obs" :historico [{:id 1 :preco 1} {:id 2 :preco 2 }]}
+                           :morango {:obs "morango-obs" :historico [{:id 1 :preco 1} {:id 2 :preco 2}]}
+                           }))
 
 (defn get-produtos-nome [nome]
   ((keyword nome) @todos-produtos))
@@ -171,9 +171,8 @@
 
 (defn insere-produtos [request]
   (let [payload (json/read-str (slurp (:body request)) :key-fn keyword)]
-    (do (swap! todos-produtos conj payload)
-        (-> (r/response (json/write-str @todos-produtos))
-            (r/header "Access-Control-Allow-Origin" "*")))))
+    (-> (r/response (json/write-str (swap! todos-produtos conj payload)))
+        (r/header "Access-Control-Allow-Origin" "*"))))
 
 ;; Rotas
 (defroutes app-routes
