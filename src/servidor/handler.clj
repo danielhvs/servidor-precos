@@ -149,16 +149,16 @@
       (r/header "Access-Control-Allow-Methods" "POST")
       (r/header "Access-Control-Allow-Headers" "content-type")))
 
-(def todos-produtos {
-                     :bananas [{:id 1 :preco 1} {:id 2 :preco 2 }]
-                     :morangos [{:id 1 :preco 1} {:id 2 :preco 2}]
-})
+(def todos-produtos (atom {
+                           :banana {:obs "" :historico [{:id 1 :preco 1} {:id 2 :preco 2 }]}
+                           :morango {:obs "" :historico [{:id 1 :preco 1} {:id 2 :preco 2}]}
+}))
 
 (defn get-produtos-nome [nome]
-  ((keyword nome) todos-produtos))
+  ((keyword nome) @todos-produtos))
 
 (defn produtos []
-  (-> (r/response (json/write-str todos-produtos))
+  (-> (r/response (json/write-str @todos-produtos))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn produtos-nome [nome]
@@ -166,19 +166,21 @@
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn produtos-nome-id [nome id]
-  (-> (r/response (json/write-str (first (filter #(= (:id %) (read-string id)) (get-produtos-nome nome)))))
+  (-> (r/response (json/write-str (first (filter #(= (:id %) (read-string id)) (:historico (get-produtos-nome nome))))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
-(defn insert-produtos [nome id]
-  (-> (r/response (json/write-str {:ok "sim"}))
-      (r/header "Access-Control-Allow-Origin" "*")))
+(defn insere-produtos [request]
+  (let [payload (json/read-str (slurp (:body request)) :key-fn keyword)]
+    (do (swap! todos-produtos conj payload)
+        (-> (r/response (json/write-str @todos-produtos))
+            (r/header "Access-Control-Allow-Origin" "*")))))
 
 ;; Rotas
 (defroutes app-routes
   (GET "/produtos" [] (produtos))
   (GET "/produtos/:nome" [nome] (produtos-nome nome))
   (GET "/produtos/:nome/:id" [nome id] (produtos-nome-id nome id))
-  (POST "/produtos/:nome" [nome dados] (insert-produtos nome dados))
+  (POST "/produtos" request (insere-produtos request))
   (GET "/consulta/:nome" [nome] (consulta nome))
   (GET "/consulta" [] (consulta-produtos))
   (GET "/consulta-mercado" [] (consulta-mercado))
@@ -188,6 +190,7 @@
   (POST "/boot-mercado" request (boot-mercado request))
   (POST "/salva-mercado" request (salva-mercado request))
   (OPTIONS "/cadastra" request (opcoes))
+  (OPTIONS "/produtos" request (opcoes))
   (OPTIONS "/boot-cadastra" request (opcoes))
   (OPTIONS "/boot-mercado" request (opcoes))
   (OPTIONS "/salva-mercado" request (opcoes))
