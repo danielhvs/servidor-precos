@@ -171,8 +171,9 @@
 
 (defn insere-produtos [request]
   (let [payload (json/read-str (slurp (:body request)) :key-fn keyword)]
-    (-> (r/response (json/write-str (swap! todos-produtos conj payload)))
-        (r/header "Access-Control-Allow-Origin" "*"))))
+    (do (swap! todos-produtos conj payload)
+        {:status 200
+         :headers {"Access-Control-Allow-Origin" "*"}})))
 
 ;; Rotas
 (defroutes app-routes

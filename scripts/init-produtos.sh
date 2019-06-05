@@ -1,16 +1,70 @@
 #!/bin/bash
 prods=(
-papel-toalha
-papel-higienico
 ajax
-x14
 alcool
 pinho-sol
+x14
 kiboa
+limpa-vidros
+anti-mofo-produto
+detergente
+papel-toalha
+guardanapo
+farelo-de-aveia
+salgadinho
+manteiga
+arroz
+feijao
+sal
+acucar-refinado
+acucar-mascavo
+acucar-demerara
+pipoca
+sobrecoxa
+sassami
+coxao-mole
+alcatra
+file-mignon
+maminha
+arroz-risoto
+biscoito-arroz
+biscoito-zooreta
+farinha-trigo
+cafe
+extrato-tomate
+leite-condensado
+passata
+creme-leite
+leite-coco
+extrato-baunilha
+fermento-biologico
+ovo
+sabonete
+sabonete-juju
+shampoo
+shampoo-juju
+lenco-umedecido
+papel-higienico
+gillete
+gillete-clarissa
+espuma-barbear
+escova-dentes
+escova-dentes-juju
+pasta-dentes
+pasta-dentes-juju
+condicionador
+condicionador-juju
+queijo-mussarela
+queijo-gorgonzola
+requeijao
+salame
+iogurte
+macarrao
+file-mignon-porco
 )
 
 for p in ${prods[@]}; do
-curl -s -H "Content-Type: application/json"  --request POST -d "{\"$p\": {\"obs\":\"obs-$p\" \"historico\":[]}}" localhost:3000/produtos
+	curl -s -H "Content-Type: application/json"  --request POST -d "{\"$p\": {\"obs\":\"obs-$p\" \"historico\":[]}}" localhost:3000/produtos
 done
 
 
