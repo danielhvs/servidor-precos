@@ -64,7 +64,7 @@ file-mignon-porco
 )
 
 for p in ${prods[@]}; do
-	curl -s -H "Content-Type: application/json"  --request POST -d "{\"$p\": {\"obs\":\"obs-$p\" \"historico\":[]}}" localhost:3000/produtos
+	curl -s -H "Content-Type: application/json"  --request POST -d "{\"$p\": {\"sumario\": {\"obs\":\"obs-$p\" \"preco\":\"9999999\"} \"historico\":[]}}" localhost:3000/produtos
 done
 
 

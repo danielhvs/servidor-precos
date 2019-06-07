@@ -152,9 +152,12 @@
 (defn le-payload! [request]
   (json/read-str (slurp (:body request)) :key-fn keyword))
 
+(defn registro [obs preco]
+  {:obs obs :preco preco})
+
 (def todos-produtos (atom {
-                           :banana {:obs "banana-obs" :historico [{:id 1 :preco 1} {:id 2 :preco 2 }]}
-                           :morango {:obs "morango-obs" :historico [{:id 1 :preco 1} {:id 2 :preco 2}]}
+                           :banana {:sumario (registro "banana-obs" 1) :historico [(registro "" 1) (registro "" 2)]}
+                           :morango {:sumario (registro "morango-obs" 2) :historico [(registro "" 3) (registro "" 4)]}
                            }))
 
 (defn get-produtos-nome [nome]
@@ -168,13 +171,12 @@
   (-> (r/response (json/write-str (get-produtos-nome nome)))
       (r/header "Access-Control-Allow-Origin" "*")))
 
-(defn produtos-nome-obs [nome request]
+(defn produtos-nome-sumario [nome request]
   (let [payload (le-payload! request)]
-    (dosync
-     (println (str "r: " (str payload)))
-     (swap! todos-produtos #(assoc-in % [(keyword nome) :obs] (:obs payload)))
-     {:status 200
-      :headers {"Access-Control-Allow-Origin" "*"}})))
+    (do
+      (swap! todos-produtos #(assoc-in % [(keyword nome) :sumario] payload))
+      {:status 200
+       :headers {"Access-Control-Allow-Origin" "*"}})))
 
 (defn produtos-nome-id [nome id]
   (-> (r/response (json/write-str (first (filter #(= (:id %) (read-string id)) (:historico (get-produtos-nome nome))))))
@@ -190,7 +192,7 @@
 (defroutes app-routes
   (GET "/produtos" [] (produtos))
   (GET "/produtos/:nome" [nome] (produtos-nome nome))
-  (POST "/produtos/:nome/obs" [nome :as r] (produtos-nome-obs nome r))
+  (POST "/produtos/:nome/sumario" [nome :as r] (produtos-nome-sumario nome r))
   (GET "/produtos/:nome/:id" [nome id] (produtos-nome-id nome id))
   (POST "/produtos" request (insere-produtos request))
   (GET "/consulta/:nome" [nome] (consulta nome))
