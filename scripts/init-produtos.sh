@@ -61,6 +61,20 @@ salame
 iogurte
 macarrao
 file-mignon-porco
+queijo-parmesao
+sal
+arroz
+canjica
+cafe
+leite
+nutella
+coco
+passata
+lava-louca
+desodorate
+agua-coco
+sabonete-liquido
+canela
 )
 
 for p in ${prods[@]}; do

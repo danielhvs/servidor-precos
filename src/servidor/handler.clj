@@ -178,6 +178,13 @@
       {:status 200
        :headers {"Access-Control-Allow-Origin" "*"}})))
 
+(defn produtos-nome-historico [nome request]
+  (let [payload (le-payload! request)]
+    (do
+      (swap! todos-produtos #(update-in % [(keyword nome) :historico] (fn [coll] (conj coll payload))))
+      {:status 200
+       :headers {"Access-Control-Allow-Origin" "*"}})))
+
 (defn produtos-nome-id [nome id]
   (-> (r/response (json/write-str (first (filter #(= (:id %) (read-string id)) (:historico (get-produtos-nome nome))))))
       (r/header "Access-Control-Allow-Origin" "*")))
@@ -193,6 +200,7 @@
   (GET "/produtos" [] (produtos))
   (GET "/produtos/:nome" [nome] (produtos-nome nome))
   (POST "/produtos/:nome/sumario" [nome :as r] (produtos-nome-sumario nome r))
+  (POST "/produtos/:nome/historico" [nome :as r] (produtos-nome-historico nome r))
   (GET "/produtos/:nome/:id" [nome id] (produtos-nome-id nome id))
   (POST "/produtos" request (insere-produtos request))
   (GET "/consulta/:nome" [nome] (consulta nome))
