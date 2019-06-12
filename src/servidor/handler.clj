@@ -161,6 +161,15 @@
 (defn get-produtos-nome [nome]
   ((keyword nome) @todos-produtos))
 
+(defn tem-sumario [nome]
+  (:sumario ((keyword nome) @todos-produtos)))
+
+(defn insere-produto [payload]
+  (swap! todos-produtos conj payload))
+
+(defn insere-sumario [nome payload]
+  (swap! todos-produtos #(assoc-in % [(keyword nome) :sumario] payload)))
+
 (defn produtos []
   (-> (r/response (json/write-str @todos-produtos))
       (r/header "Access-Control-Allow-Origin" "*")))
@@ -169,13 +178,12 @@
   (-> (r/response (json/write-str (get-produtos-nome nome)))
       (r/header "Access-Control-Allow-Origin" "*")))
 
-(defn insere-sumario [nome payload]
-  (swap! todos-produtos #(assoc-in % [(keyword nome) :sumario] payload)))
-
 (defn produtos-nome-sumario [nome request]
   (let [payload (le-payload! request)]
     (do
-      (insere-sumario nome payload)
+      (if (tem-sumario nome)
+        (insere-sumario nome payload)
+        (insere-produto {(keyword nome) {:sumario payload}}))
       {:status 200
        :headers {"Access-Control-Allow-Origin" "*"}})))
 
@@ -185,7 +193,7 @@
 (defn produtos-nome-historico [nome request]
   (let [payload (le-payload! request)]
     (do
-      (if (:sumario ((keyword nome) @todos-produtos))
+      (if (tem-sumario nome)
         (insere-historico nome payload)
         (do (insere-sumario nome {:preco (:preco payload) :obs "" :local (:local payload)})
             (insere-historico nome payload)))
@@ -198,7 +206,7 @@
 
 (defn insere-produtos [request]
   (let [payload (le-payload! request)]
-    (do (swap! todos-produtos conj payload)
+    (do (insere-produto payload)
         {:status 200
          :headers {"Access-Control-Allow-Origin" "*"}})))
 
@@ -220,6 +228,8 @@
   (POST "/salva-mercado" request (salva-mercado request))
   (OPTIONS "/cadastra" request (opcoes))
   (OPTIONS "/produtos" request (opcoes))
+  (OPTIONS "/produtos/:nome/sumario" [nome :as r] (opcoes))
+  (OPTIONS "/produtos/:nome/historico" [nome :as r] (opcoes))
   (OPTIONS "/boot-cadastra" request (opcoes))
   (OPTIONS "/boot-mercado" request (opcoes))
   (OPTIONS "/salva-mercado" request (opcoes))
