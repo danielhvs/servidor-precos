@@ -169,17 +169,26 @@
   (-> (r/response (json/write-str (get-produtos-nome nome)))
       (r/header "Access-Control-Allow-Origin" "*")))
 
+(defn insere-sumario [nome payload]
+  (swap! todos-produtos #(assoc-in % [(keyword nome) :sumario] payload)))
+
 (defn produtos-nome-sumario [nome request]
   (let [payload (le-payload! request)]
     (do
-      (swap! todos-produtos #(assoc-in % [(keyword nome) :sumario] payload))
+      (insere-sumario nome payload)
       {:status 200
        :headers {"Access-Control-Allow-Origin" "*"}})))
+
+(defn insere-historico [nome payload]
+  (swap! todos-produtos #(update-in % [(keyword nome) :historico] (fn [coll] (conj coll payload)))))
 
 (defn produtos-nome-historico [nome request]
   (let [payload (le-payload! request)]
     (do
-      (swap! todos-produtos #(update-in % [(keyword nome) :historico] (fn [coll] (conj coll payload))))
+      (if (:sumario ((keyword nome) @todos-produtos))
+        (insere-historico nome payload)
+        (do (insere-sumario nome {:preco (:preco payload) :obs "" :local (:local payload)})
+            (insere-historico nome payload)))
       {:status 200
        :headers {"Access-Control-Allow-Origin" "*"}})))
 
