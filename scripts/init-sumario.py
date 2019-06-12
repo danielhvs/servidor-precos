@@ -15,7 +15,7 @@ for p in produtos:
     connection.request('POST', '/produtos/' + p[0] + '/sumario', json.dumps({"obs":p[1], "preco":p[2]}), headers)
     response = connection.getresponse()
     response.read()
-    connection.request('GET', '/produtos/' + p[0])
+    endpoint = '/produtos/' + p[0]
+    connection.request('GET', endpoint)
     response = connection.getresponse()
-    print(response.read().decode())
-
+    print(endpoint + ": " + response.read().decode())

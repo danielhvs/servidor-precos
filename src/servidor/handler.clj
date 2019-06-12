@@ -155,10 +155,8 @@
 (defn registro [obs preco]
   {:obs obs :preco preco})
 
-(def todos-produtos (atom {
-                           :banana {:sumario (registro "banana-obs" 1) :historico [(registro "" 1) (registro "" 2)]}
-                           :morango {:sumario (registro "morango-obs" 2) :historico [(registro "" 3) (registro "" 4)]}
-                           }))
+;:banana {:sumario (registro "banana-obs" 1) :historico [(registro "" 1) (registro "" 2)]}
+(def todos-produtos (atom {}))
 
 (defn get-produtos-nome [nome]
   ((keyword nome) @todos-produtos))
