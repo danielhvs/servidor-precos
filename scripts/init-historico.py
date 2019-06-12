@@ -7,6 +7,12 @@ connection = http.client.HTTPConnection('localhost:3000')
 headers = {'Content-type': 'application/json'}
 
 produtos = {
+"azeite": [
+["15.34", "angeloni"],
+],
+"oleo": [
+["5.99", "angeloni"],
+],
 "salgadinho-lays": [
 ["5.79", "forte"],
 ],
@@ -36,6 +42,7 @@ produtos = {
 ],
 "sache-johnny": [
 ["1.75", "forte"],
+["1.89", "angeloni"],
 ],
 "detergente": [
 ["1.49", "forte"],
@@ -64,11 +71,18 @@ produtos = {
 "banana": [
 ["2.79", "forte"],
 ],
+"suco-uva-1.5l": [
+["8.94", "angeloni"]
+],
+"guardanapo": [
+["3.59", "angeloni"]
+],
 "creme-leite": [
 ["1.55", "forte"]
 ],
 "papel-toalha": [
-["3.49", "bistek"]
+["3.49", "bistek"],
+["4.39", "angeloni"]
 ]
 }
 
