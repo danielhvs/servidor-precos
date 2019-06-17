@@ -95,3 +95,82 @@ for k, v in produtos.items():
     connection.request('GET', endpoint)
     response = connection.getresponse()
     print(endpoint + ": " + response.read().decode())
+
+comprasBistek = {
+"sabonete liquido": [
+["4.99"],
+],
+"sabonete Juju": [
+["3.29"],
+],
+"glicerina": [
+["6.45"],
+],
+"shampoo juju 400ml": [
+["17.97"],
+],
+"kiboa": [
+["3.79"],
+],
+"detergente": [
+["1.85"],
+],
+"ajax pesado": [
+["5.35"],
+],
+"limpa vidro": [
+["9.97"],
+],
+"omo": [
+["17.97"],
+],
+"batata palha": [
+["2.99"],
+],
+"farelo de aveia 200g": [
+["6.75"],
+],
+"leite": [
+["2.97"],
+],
+"salgadinho": [
+["6.25"],
+["4.99"],
+],
+"biscoito de arroz": [
+["5.79"],
+],
+"cafe 250g": [
+["8.48"],
+],
+"maca verde": [
+["7.99"],
+],
+"bifinho": [
+["2.99"],
+],
+"espuma barbear": [
+["20"],
+],
+"sobrecoxa": [
+["7.97"],
+],
+"file de peito de frango": [
+["9.97"],
+],
+"salame": [
+["5.47"],
+],
+}
+
+
+for k, v in comprasBistek.items():
+    for d in v:
+        l = k.replace(" ", "%20")
+        connection.request('POST', '/produtos/' +  l + '/historico', json.dumps({"preco":d[0], "local":"bistek", "obs":""}), headers)
+        response = connection.getresponse()
+        response.read()
+    endpoint = '/produtos/' + l
+    connection.request('GET', endpoint)
+    response = connection.getresponse()
+    print(endpoint + ": " + response.read().decode())
