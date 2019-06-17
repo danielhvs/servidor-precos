@@ -152,10 +152,7 @@
 (defn le-payload! [request]
   (json/read-str (slurp (:body request)) :key-fn keyword))
 
-(defn registro [obs preco]
-  {:obs obs :preco preco})
-
-;:banana {:sumario (registro "banana-obs" 1) :historico [(registro "" 1) (registro "" 2)]}
+; {:banana {:sumario {:preco :obs} :historico [{:preco :obs :local}]}}
 (def todos-produtos (atom {}))
 
 (defn get-produtos-nome [nome]

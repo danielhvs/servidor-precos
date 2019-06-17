@@ -88,7 +88,7 @@ produtos = {
 
 for k, v in produtos.items():
     for d in v:
-        connection.request('POST', '/produtos/' + k + '/historico', json.dumps({"preco":d[0], "local":d[1]}), headers)
+        connection.request('POST', '/produtos/' + k + '/historico', json.dumps({"preco":d[0], "local":d[1], "obs":"obs"}), headers)
         response = connection.getresponse()
         response.read()
     endpoint = '/produtos/' + k
