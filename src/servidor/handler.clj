@@ -150,9 +150,9 @@
       (r/header "Access-Control-Allow-Headers" "content-type")))
 
 (defn le-payload! [request]
-  (json/read-str (slurp (:body request)) :key-fn keyword))
+  (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-valor-request))
 
-; {:banana {:sumario {:preco :obs} :historico [{:preco :obs :local}]}}
+; {:banana {:sumario "sumario" :melhor-preco "" :historico [{:preco :obs :local}]}}
 (def todos-produtos (atom {}))
 
 (defn get-produtos-nome [nome]
@@ -185,7 +185,9 @@
        :headers {"Access-Control-Allow-Origin" "*"}})))
 
 (defn insere-historico [nome payload]
-  (swap! todos-produtos #(update-in % [(keyword nome) :historico] (fn [coll] (conj coll payload)))))
+  (do
+    (swap! todos-produtos #(update-in % [(keyword nome) :historico] (fn [coll] (conj coll payload))))
+    (swap! todos-produtos #(assoc-in % [(keyword nome) :melhor-preco] (apply min (map :preco (:historico ((keyword nome) @todos-produtos))))))))
 
 (defn produtos-nome-historico [nome request]
   (let [payload (le-payload! request)]
