@@ -7,6 +7,12 @@ connection = http.client.HTTPConnection('localhost:3000')
 headers = {'Content-type': 'application/json'}
 
 produtos = {
+"patinho": [
+["23.59", "angeloni"],
+],
+"coxao mole": [
+["21.39", "angeloni"],
+],
 "azeite": [
 ["15.34", "angeloni"],
 ],
@@ -88,7 +94,8 @@ produtos = {
 
 for k, v in produtos.items():
     for d in v:
-        connection.request('POST', '/produtos/' + k + '/historico', json.dumps({"preco":d[0], "local":d[1], "obs":"obs"}), headers)
+        l = k.replace(" ", "%20")
+        connection.request('POST', '/produtos/' + l + '/historico', json.dumps({"preco":d[0], "local":d[1], "obs":"obs"}), headers)
         response = connection.getresponse()
         response.read()
     endpoint = '/produtos/' + k
