@@ -6,6 +6,65 @@ connection = http.client.HTTPConnection('localhost:3000')
 
 headers = {'Content-type': 'application/json'}
 
+produtos = [
+{"nome": "cenoura", "local": "bistek", "preco": "2.98"},
+{"nome": "banana", "local": "bistek", "preco": "3.98"},
+{"nome": "tomate", "local": "bistek", "preco": "8.29"},
+{"nome": "couve-flor", "local": "bistek", "preco": "4.49"},
+{"nome": "sal", "local": "bistek", "preco": "3.69"},
+{"nome": "molho yakissoba", "local": "bistek", "preco": "2.79"},
+{"nome": "curcuma", "local": "bistek", "preco": "2.39"},
+{"nome": "queijo ralado", "local": "bistek", "preco": "2.99"},
+{"nome": "macarrao yakissoba", "local": "bistek", "preco": "4.89"},
+{"nome": "biscoito de arroz", "local": "bistek", "preco": "3.98"},
+{"nome": "torrada", "local": "bistek", "preco": "1.99"},
+{"nome": "pao de castanha e nozes", "local": "bistek", "preco": "8.29"},
+{"nome": "molho shoyo", "local": "bistek", "preco": "2.79"},
+{"nome": "azeite", "local": "bistek", "preco": "19.87"},
+{"nome": "mortadela", "local": "bistek", "preco": "5.93"},
+{"nome": "alcatra", "local": "bistek", "preco": "25.98"},
+{"nome": "iogurte grego", "local": "bistek", "preco": "1.89"},
+{"nome": "queijo gorgonzola", "local": "bistek", "preco": "55.90"},
+{"nome": "papel toalha", "local": "bistek", "preco": "3.49"},
+{"nome": "pano umedecido", "local": "bistek", "preco": "8.22"},
+{"nome": "fralda", "local": "bistek", "preco": "0.88"},
+{"nome": "limao", "local": "big", "preco": "3.98"},
+{"nome": "banana", "local": "big", "preco": "3.59"},
+{"nome": "laranja", "local": "big", "preco": "3.86"},
+{"nome": "oleo", "local": "big", "preco": "6.74"},
+{"nome": "salame", "local": "big", "preco": "4.78"},
+{"nome": "polvilho-doce", "local": "bistek", "preco": "3.99"},
+{"nome": "polvilho-azedo", "local": "bistek", "preco": "7.99"},
+{"nome": "leite-condensado-lata", "local": "bistek", "preco": "6.57"},
+{"nome": "saco-lixo", "local": "bistek", "preco": "9.9"},
+{"nome": "alcool-gel", "local": "bistek", "preco": "11.99"},
+{"nome": "papel-toalha", "local": "bistek", "preco": "3.55"},
+{"nome": "pasta-dente", "local": "bistek", "preco": "5.29"},
+{"nome": "detergente", "local": "bistek", "preco": "1.85"},
+{"nome": "agua-coco", "local": "bistek", "preco": "2.99"},
+{"nome": "bicarbonato-sodio", "local": "bistek", "preco": "3.69"},
+{"nome": "sabonete", "local": "bistek", "preco": "2.69"},
+{"nome": "sabonete-johnson", "local": "bistek", "preco": "3.07"},
+{"nome": "escova-dente", "local": "bistek", "preco": "7.41"},
+{"nome": "faca", "local": "bistek", "preco": "4.79"},
+{"nome": "colher-cozinha", "local": "bistek", "preco": "23.90"},
+{"nome": "ajax", "local": "bistek", "preco": "2.97"},
+{"nome": "macrovita-1l", "local": "bistek", "preco": "11.29"},
+{"nome": "queijo-mussarela", "local": "bistek", "preco": "25.97"},
+{"nome": "queijo-prato", "local": "bistek", "preco": "27.97"},
+{"nome": "papel-higienico", "local": "bistek", "preco": "19.90"}
+]
+
+for v in produtos:
+    l = v['nome'].replace(" ", "%20")
+    connection.request('POST', '/produtos/' +  l + '/historico', json.dumps({"preco":v['preco'], "local":v['local'], "obs":""}), headers)
+    response = connection.getresponse()
+    response.read()
+    endpoint = '/produtos/' + l
+    connection.request('GET', endpoint)
+    response = connection.getresponse()
+    print(endpoint + ": " + response.read().decode())
+
 produtos = {
 "patinho": [
 ["23.59", "angeloni"],
@@ -181,3 +240,4 @@ for k, v in comprasBistek.items():
     connection.request('GET', endpoint)
     response = connection.getresponse()
     print(endpoint + ": " + response.read().decode())
+
