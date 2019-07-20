@@ -82,7 +82,7 @@
 
 ; {:nome "banana" :sumario "sumario" :melhor-preco "" :historico [{:preco :obs :local}]}}
 (defn get-produtos-nome [nome]
-  (db-consulta-produto {:nome nome}))
+  (first (db-consulta-produto {:nome nome})))
 
 (defn tem-sumario [nome]
   (let [item (db-consulta-produto {:nome nome})]
