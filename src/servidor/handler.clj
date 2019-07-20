@@ -160,7 +160,7 @@
 (def todos-produtos (atom {}))
 
 (defn get-produtos-nome [nome]
-  (db-consulta-produto db [nome]))
+  (db-consulta-produto db {:nome nome}))
 
 (defn tem-sumario [nome]
   (let [item (db-consulta-produto db {:nome nome})]
@@ -169,14 +169,14 @@
 
 (defn insere-sumario [nome payload]
   (let [item (db-consulta-produto db {:nome nome})]
-    (mc/update-by-id db "produtos" (:_id (first item)) {$set payload})))
+    (mc/update-by-id db "produtos" (:_id item) {$set payload})))
 
 (defn produtos []
   (-> (r/response (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn produtos-nome [nome]
-  (-> (r/response (json/write-str (get-produtos-nome nome)))
+  (-> (r/response (json/write-str (get-produtos-nome nome) :value-fn transforma-id-para-string))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn produtos-nome-sumario [nome request]
