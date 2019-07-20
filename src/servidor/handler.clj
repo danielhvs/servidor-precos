@@ -24,7 +24,7 @@
 (def db
   (:db (conecta-bd)))
 
-(defn db-consulta-produto [db query]
+(defn db-consulta-produto [query]
   (mc/find-maps db "produtos" query))
 
 (defn insert [item]
@@ -90,12 +90,12 @@
 
 (defn consulta [nome]
   (let [db (:db (conecta-bd))]
-    (-> (r/response (json/write-str (db-consulta-produto db {:nome nome}) :value-fn transforma-id-para-string))
+    (-> (r/response (json/write-str (db-consulta-produto {:nome nome}) :value-fn transforma-id-para-string))
         (r/header "Access-Control-Allow-Origin" "*"))))
 
 (defn consulta-produtos []
   (let [db (:db (conecta-bd))]
-    (-> (r/response (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))
+    (-> (r/response (json/write-str (db-consulta-produto {}) :value-fn transforma-id-para-string))
         (r/header "Access-Control-Allow-Origin" "*"))))
 
 (defn remove-tudo []
@@ -143,7 +143,7 @@
                      db (:db (conecta-bd))]
                  (doall (map #(update-mercado db %) tudo))
                  (mc/insert-batch db "produtos" tudo)
-                 (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))))
+                 (json/write-str (db-consulta-produto {}) :value-fn transforma-id-para-string))))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn opcoes []
@@ -160,19 +160,20 @@
 (def todos-produtos (atom {}))
 
 (defn get-produtos-nome [nome]
-  (db-consulta-produto db {:nome nome}))
+  (db-consulta-produto {:nome nome}))
 
 (defn tem-sumario [nome]
-  (let [item (db-consulta-produto db {:nome nome})]
-    (do (println item)
-        (:sumario (first item)))))
+  (let [item (db-consulta-produto {:nome nome})]
+    (:sumario (first item))))
 
 (defn insere-sumario [nome payload]
-  (let [item (db-consulta-produto db {:nome nome})]
-    (mc/update-by-id db "produtos" (:_id item) {$set payload})))
+  (let [item (db-consulta-produto {:nome nome})]
+    (if (empty? item)
+      (mc/insert db "produtos" (conj {:nome nome} payload))
+      (mc/update-by-id db "produtos" (:_id (first item)) {$set payload}))))
 
 (defn produtos []
-  (-> (r/response (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))
+  (-> (r/response (json/write-str (db-consulta-produto {}) :value-fn transforma-id-para-string))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn produtos-nome [nome]
@@ -184,21 +185,26 @@
     (do
       (if (tem-sumario nome)
         (insere-sumario nome payload)
-        (insere-produto {:nome nome :sumario (:sumario payload)}))
+        (insert {:nome nome :sumario (:sumario payload)}))
       {:status 200
        :headers {"Access-Control-Allow-Origin" "*"}})))
 
 (defn insere-historico [nome payload]
-  (do
-    (swap! todos-produtos #(update-in % [(keyword nome) :historico] (fn [coll] (conj coll payload))))
-    (swap! todos-produtos #(assoc-in % [(keyword nome) :melhor-preco] (apply min (map :preco (:historico ((keyword nome) @todos-produtos))))))))
+  (let [item (first (db-consulta-produto {:nome nome}))
+        historico (:historico item)
+        novo-historico (conj historico payload)
+        melhor-preco (apply min (map :preco novo-historico))
+        novo-item (assoc (assoc item :melhor-preco (min melhor-preco (:preco payload))) :historico novo-historico)
+        x (println (str "novo-item " novo-item))
+]
+    (mc/update-by-id db "produtos" (:_id item) {$set novo-item})))
 
 (defn produtos-nome-historico [nome request]
   (let [payload (le-payload! request)]
     (do
       (if (tem-sumario nome)
         (insere-historico nome payload)
-        (do (insere-sumario nome {:preco (:preco payload) :obs "" :local (:local payload)})
+        (do (insere-sumario nome {:sumario ""})
             (insere-historico nome payload)))
       {:status 200
        :headers {"Access-Control-Allow-Origin" "*"}})))
