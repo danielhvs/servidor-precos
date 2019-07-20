@@ -163,10 +163,13 @@
   (db-consulta-produto db [nome]))
 
 (defn tem-sumario [nome]
-  (:sumario ((keyword nome) @todos-produtos)))
+  (let [item (db-consulta-produto db {:nome nome})]
+    (do (println item)
+        (:sumario (first item)))))
 
 (defn insere-sumario [nome payload]
-  (swap! todos-produtos #(assoc-in % [(keyword nome) :sumario] payload)))
+  (let [item (db-consulta-produto db {:nome nome})]
+    (mc/update-by-id db "produtos" (:_id (first item)) {$set payload})))
 
 (defn produtos []
   (-> (r/response (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))
@@ -181,7 +184,7 @@
     (do
       (if (tem-sumario nome)
         (insere-sumario nome payload)
-        (insere-produto {(keyword nome) {:sumario payload}}))
+        (insere-produto {:nome nome :sumario (:sumario payload)}))
       {:status 200
        :headers {"Access-Control-Allow-Origin" "*"}})))
 
