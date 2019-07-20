@@ -21,8 +21,14 @@
   (let [uri "mongodb://user-mercado:M3rc4d0*@ds237723.mlab.com:37723/mercado"] 
     (mg/connect-via-uri uri)))
 
+(def db
+  (:db (conecta-bd)))
+
 (defn db-consulta-produto [db query]
   (mc/find-maps db "produtos" query))
+
+(defn insert [item]
+  (mc/insert-and-return db "produtos" item))
 
 (defn db-consulta-mercado [db nome]
   (mc/find-maps db "mercado" {:nome nome}))
@@ -76,8 +82,6 @@
 
 (defn transforma-preco [chave valor]
   (if (= chave :preco) (Float/valueOf valor) valor))
-
-
 
 ;; Servicos
 (defn consulta-mercado []
@@ -152,23 +156,20 @@
 (defn le-payload! [request]
   (json/read-str (slurp (:body request)) :key-fn keyword :value-fn transforma-valor-request))
 
-; {:banana {:sumario "sumario" :melhor-preco "" :historico [{:preco :obs :local}]}}
+; {:nome "banana" :sumario "sumario" :melhor-preco "" :historico [{:preco :obs :local}]}}
 (def todos-produtos (atom {}))
 
 (defn get-produtos-nome [nome]
-  ((keyword nome) @todos-produtos))
+  (db-consulta-produto db [nome]))
 
 (defn tem-sumario [nome]
   (:sumario ((keyword nome) @todos-produtos)))
-
-(defn insere-produto [payload]
-  (swap! todos-produtos conj payload))
 
 (defn insere-sumario [nome payload]
   (swap! todos-produtos #(assoc-in % [(keyword nome) :sumario] payload)))
 
 (defn produtos []
-  (-> (r/response (json/write-str @todos-produtos))
+  (-> (r/response (json/write-str (db-consulta-produto db {}) :value-fn transforma-id-para-string))
       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn produtos-nome [nome]
@@ -205,7 +206,7 @@
 
 (defn insere-produtos [request]
   (let [payload (le-payload! request)]
-    (do (insere-produto payload)
+    (do (insert payload)
         {:status 200
          :headers {"Access-Control-Allow-Origin" "*"}})))
 
@@ -220,7 +221,7 @@
   ;(GET "/consulta/:nome" [nome] (consulta nome))
   ;(GET "/consulta" [] (consulta-produtos))
   ;(GET "/consulta-mercado" [] (consulta-mercado))
-  ;(POST "/remove-tudo" [] (remove-tudo))
+  (POST "/remove-tudo" [] (remove-tudo))
   ;(POST "/cadastra" request (cadastra request))
   ;(POST "/boot-cadastra" request (boot-cadastra request))
   ;(POST "/boot-mercado" request (boot-mercado request))
