@@ -7,7 +7,6 @@ connection = http.client.HTTPConnection('localhost:3000')
 headers = {'Content-type': 'application/json'}
 
 produtos = [
-["banana", "Na feira R$ 2.79kkk"], 
 ["papel-toalha", "No bistek sempre R$3.49"],
 ]
 
