@@ -8,6 +8,8 @@ headers = {'Content-type': 'application/json'}
 
 produtos = [
 ["papel-toalha", "No bistek sempre R$3.49"],
+["sobrecoxa", "Marca NAT é ruim"],
+["calabresa", "Marca SADIA e SEARA são boas"],
 ]
 
 for p in produtos:
