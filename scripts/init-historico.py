@@ -7,6 +7,60 @@ connection = http.client.HTTPConnection('localhost:3000')
 headers = {'Content-type': 'application/json'}
 
 produtos = [
+    
+{"nome": "salame", "local": "forte", "preco": "5.98"},
+{"nome": "manteiga", "local": "forte", "preco": "6.89"},
+{"nome": "queijo mussarela", "local": "forte", "preco": "19.99"},
+{"nome": "queijo gorgonzola", "local": "forte", "preco": "43.90"},
+{"nome": "iogurte", "local": "forte", "preco": "1.99"},
+{"nome": "queijo grana", "local": "forte", "preco": "79.99"},
+{"nome": "cafe aralto", "local": "forte", "preco": "8.79"},
+{"nome": "azeite", "local": "forte", "preco": "17.50"},
+{"nome": "leite ninho", "local": "forte", "preco": "11.90"},
+{"nome": "leite", "local": "forte", "preco": "3.19"},
+{"nome": "passata", "local": "forte", "preco": "5.49"},
+{"nome": "leite de coco", "local": "forte", "preco": "3.59"},
+{"nome": "ovomaltine", "local": "forte", "preco": "13.90"},
+{"nome": "acucar refinado", "local": "forte", "preco": "1.98"},
+{"nome": "biscoito de arroz", "local": "forte", "preco": "4.28"},
+{"nome": "salgadinho", "local": "forte", "preco": "5.59"},
+{"nome": "queijo parmesao", "local": "forte", "preco": "2.99"},
+{"nome": "oleo", "local": "forte", "preco": "5.65"},
+{"nome": "milho pipoca", "local": "forte", "preco": "2.85"},
+{"nome": "sache johnny", "local": "forte", "preco": "2.00"},
+{"nome": "arroz raris 500g", "local": "forte", "preco": "8.29"},
+{"nome": "sabonete dove", "local": "forte", "preco": "2.29"},
+
+{"nome": "sal", "local": "forte", "preco": "3.29"},
+{"nome": "sabonete liquido", "local": "forte", "preco": "5.99"},
+{"nome": "detergente", "local": "forte", "preco": "1.45"},
+{"nome": "lenco umedecido", "local": "forte", "preco": "9.99"},
+{"nome": "alho", "local": "forte", "preco": "38.90"},
+{"nome": "ajax pesado", "local": "forte", "preco": "4.99"},
+{"nome": "shampoo juju 400ml", "local": "forte", "preco": "16.50"},
+{"nome": "ajax", "local": "forte", "preco": "3.75"},
+{"nome": "omo", "local": "forte", "preco": "17.50"},
+{"nome": "desodorante", "local": "forte", "preco": "9.90"},
+{"nome": "papel-toalha", "local": "forte", "preco": "4.29"},
+{"nome": "guardanapo", "local": "forte", "preco": "3.99"},
+{"nome": "perfex", "local": "forte", "preco": "6.39"},
+{"nome": "esponja", "local": "forte", "preco": "4.69"},
+{"nome": "limpa vidros", "local": "forte", "preco": "7.59"},
+{"nome": "plastico grande com 100", "local": "forte", "preco": "6.99"},
+{"nome": "plastico pequeno com 100", "local": "forte", "preco": "5.59"},
+{"nome": "suco uva 1.5L", "local": "forte", "preco": "9.90"},
+
+
+{"nome": "costela suina sem tempero", "local": "angeloni", "preco": "17.45"},
+{"nome": "tomate cereja", "local": "angeloni", "preco": "5.35"},
+{"nome": "coxao mole", "local": "angeloni", "preco": "24.59"},
+
+{"nome": "limao", "local": "big", "preco": "3.98"},
+{"nome": "banana", "local": "big", "preco": "3.59"},
+{"nome": "laranja", "local": "big", "preco": "3.86"},
+{"nome": "oleo", "local": "big", "preco": "6.74"},
+{"nome": "salame", "local": "big", "preco": "4.78"},
+
 {"nome": "cenoura", "local": "bistek", "preco": "2.98"},
 {"nome": "banana", "local": "bistek", "preco": "3.98"},
 {"nome": "tomate", "local": "bistek", "preco": "8.29"},
@@ -28,13 +82,10 @@ produtos = [
 {"nome": "papel toalha", "local": "bistek", "preco": "3.49"},
 {"nome": "pano umedecido", "local": "bistek", "preco": "8.22"},
 {"nome": "fralda", "local": "bistek", "preco": "0.88"},
-{"nome": "limao", "local": "big", "preco": "3.98"},
-{"nome": "banana", "local": "big", "preco": "3.59"},
-{"nome": "laranja", "local": "big", "preco": "3.86"},
-{"nome": "oleo", "local": "big", "preco": "6.74"},
-{"nome": "salame", "local": "big", "preco": "4.78"},
 {"nome": "polvilho-doce", "local": "bistek", "preco": "3.99"},
+{"nome": "polvilho-doce", "local": "bistek", "preco": "3.98"},
 {"nome": "polvilho-azedo", "local": "bistek", "preco": "7.99"},
+{"nome": "polvilho-azedo", "local": "bistek", "preco": "8.59"},
 {"nome": "leite-condensado-lata", "local": "bistek", "preco": "6.57"},
 {"nome": "saco-lixo", "local": "bistek", "preco": "9.9"},
 {"nome": "alcool-gel", "local": "bistek", "preco": "11.99"},
@@ -52,6 +103,12 @@ produtos = [
 {"nome": "macrovita-1l", "local": "bistek", "preco": "11.29"},
 {"nome": "queijo-mussarela", "local": "bistek", "preco": "25.97"},
 {"nome": "queijo-prato", "local": "bistek", "preco": "27.97"},
+{"nome": "uva", "local": "bistek", "preco": "7.99"},
+{"nome": "creme de leite fresco", "local": "bistek", "preco": "15.97"},
+{"nome": "semolina", "local": "bistek", "preco": "4.48"},
+{"nome": "gelatina", "local": "bistek", "preco": "4.89"},
+{"nome": "sobrecoxa", "local": "bistek", "preco": "6.97"},
+{"nome": "biscoito zooreta", "local": "bistek", "preco": "1.79"},
 {"nome": "papel-higienico", "local": "bistek", "preco": "19.90"}
 ]
 
@@ -121,7 +178,7 @@ produtos = {
 "leite": [
 ["3.19", "forte"],
 ],
-"cafe": [
+"cafe 500g": [
 ["10.40", "forte"],
 ],
 "arroz": [
@@ -142,6 +199,9 @@ produtos = {
 "guardanapo": [
 ["3.59", "angeloni"]
 ],
+"cream-cheese": [
+["3.93", "bistek"]
+],
 "creme-leite": [
 ["1.55", "forte"]
 ],
@@ -154,7 +214,7 @@ produtos = {
 for k, v in produtos.items():
     for d in v:
         l = k.replace(" ", "%20")
-        connection.request('POST', '/produtos/' + l + '/historico', json.dumps({"preco":d[0], "local":d[1], "obs":"obs"}), headers)
+        connection.request('POST', '/produtos/' + l + '/historico', json.dumps({"preco":d[0], "local":d[1], "obs":""}), headers)
         response = connection.getresponse()
         response.read()
     endpoint = '/produtos/' + k
@@ -206,7 +266,7 @@ comprasBistek = {
 "biscoito de arroz": [
 ["5.79"],
 ],
-"cafe 250g": [
+"cafe aralto": [
 ["8.48"],
 ],
 "maca verde": [
@@ -260,7 +320,7 @@ comprasFort = {
 "cafe aralto": [
 ["8.99"],
 ],
-"cafe do ponto 500g": [
+"cafe 500g": [
 ["10.40"],
 ],
 "macarrao yakissoba": [
