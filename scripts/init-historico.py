@@ -6,8 +6,13 @@ connection = http.client.HTTPConnection('localhost:3000')
 
 headers = {'Content-type': 'application/json'}
 
+
 higiene = [
     
+{"nome":"shampoo juju 400ml", "local": "bistek", "preco": "17.97"},
+{"nome":"sabonete Juju", "local": "bistek", "preco": "3.29"},
+{"nome":"espuma barbear", "local": "bistek", "preco": "20"},
+{"nome":"sabonete liquido", "local": "bistek", "preco": "4.99"},
 {"nome": "escova-dente", "local": "bistek", "preco": "7.41"},
 {"nome": "sabonete-johnson", "local": "bistek", "preco": "3.07"},
 {"nome": "sabonete", "local": "bistek", "preco": "2.69"},
@@ -20,7 +25,13 @@ higiene = [
 ]
 
 limpezas = [
-
+    
+{"nome":"glicerina", "local": "bistek", "preco": "6.45"},
+{"nome":"omo", "local": "bistek", "preco": "17.97"},
+{"nome":"limpa vidro", "local": "bistek", "preco": "9.97"},
+{"nome":"ajax pesado", "local": "bistek", "preco": "5.35"},
+{"nome":"detergente", "local": "bistek", "preco": "1.85"},
+{"nome":"kiboa", "local": "bistek", "preco": "3.79"},
 {"nome": "papel-higienico", "local": "bistek", "preco": "19.90"}
 {"nome": "ajax", "local": "bistek", "preco": "2.97"},
 {"nome": "detergente", "local": "bistek", "preco": "1.85"},
@@ -44,6 +55,20 @@ limpezas = [
 ]
 
 alimentacao = [
+    
+{"nome":"salame", "local": "bistek", "preco": "5.47"},
+{"nome":"file de peito de frango", "local": "bistek", "preco": "9.97"},
+{"nome":"sobrecoxa", "local": "bistek", "preco": "7.97"},
+{"nome":"bifinho", "local": "bistek", "preco": "2.99"},
+{"nome":"maca verde", "local": "bistek", "preco": "7.99"},
+{"nome":"cafe aralto", "local": "bistek", "preco": "8.48"},
+{"nome":"biscoito de arroz", "local": "bistek", "preco": "5.79"},
+{"nome":"salgadinho", "local": "bistek", "preco": "6.25"},
+{"nome":"salgadinho", "local": "bistek", "preco": "4.99"},
+{"nome":"leite", "local": "bistek", "preco": "2.97"},
+{"nome":"farelo de aveia 200g", "local": "bistek", "preco": "6.75"},
+{"nome":"batata palha", "local": "bistek", "preco": "2.99"},
+
 
 {"nome": "biscoito zooreta", "local": "bistek", "preco": "1.79"},
 {"nome": "sobrecoxa", "local": "bistek", "preco": "6.97"},
@@ -265,84 +290,6 @@ for k, v in produtos.items():
     response = connection.getresponse()
     print(endpoint + ": " + response.read().decode())
 
-comprasBistek = {
-"sabonete liquido": [
-["4.99"],
-],
-"sabonete Juju": [
-["3.29"],
-],
-"glicerina": [
-["6.45"],
-],
-"shampoo juju 400ml": [
-["17.97"],
-],
-"kiboa": [
-["3.79"],
-],
-"detergente": [
-["1.85"],
-],
-"ajax pesado": [
-["5.35"],
-],
-"limpa vidro": [
-["9.97"],
-],
-"omo": [
-["17.97"],
-],
-"batata palha": [
-["2.99"],
-],
-"farelo de aveia 200g": [
-["6.75"],
-],
-"leite": [
-["2.97"],
-],
-"salgadinho": [
-["6.25"],
-["4.99"],
-],
-"biscoito de arroz": [
-["5.79"],
-],
-"cafe aralto": [
-["8.48"],
-],
-"maca verde": [
-["7.99"],
-],
-"bifinho": [
-["2.99"],
-],
-"espuma barbear": [
-["20"],
-],
-"sobrecoxa": [
-["7.97"],
-],
-"file de peito de frango": [
-["9.97"],
-],
-"salame": [
-["5.47"],
-],
-}
-
-
-for k, v in comprasBistek.items():
-    for d in v:
-        l = k.replace(" ", "%20")
-        connection.request('POST', '/produtos/' +  l + '/historico', json.dumps({"preco":d[0], "local":"bistek", "obs":""}), headers)
-        response = connection.getresponse()
-        response.read()
-    endpoint = '/produtos/' + l
-    connection.request('GET', endpoint)
-    response = connection.getresponse()
-    print(endpoint + ": " + response.read().decode())
 
 comprasFort = {
 "perfex": [
