@@ -8,6 +8,7 @@ headers = {'Content-type': 'application/json'}
 
 higiene = [
     
+{"nome":"papel higienico", "local": "forte", "preco":"1.07"},
 {"nome":"sabonete-liquido", "local": "forte", "preco":"5.49"},
 {"nome":"desodorante", "local": "forte", "preco":"10.90"},
 {"nome":"shampoo juju 400ml", "local": "bistek", "preco": "17.97"},
@@ -26,6 +27,16 @@ higiene = [
 ]
 
 limpezas = [
+
+{"nome":"omo", "local": "forte", "preco":"17.90"},
+{"nome":"lava louca", "local": "forte", "preco":"15.90"},
+{"nome":"pinho sol", "local": "forte", "preco":"6.89"},
+{"nome":"saco de lixo 30L", "local": "forte", "preco":"10.90"},
+{"nome":"ajax pesado", "local": "forte", "preco":"4.99"},
+{"nome":"alcool", "local": "forte", "preco":"4.99"},
+{"nome":"plastico pequeno com 100", "local": "forte", "preco":"4.99"},
+{"nome":"plastico grande com 100", "local": "forte", "preco":"6.99"},
+{"nome":"perfex", "local": "forte", "preco":"4.99"},
 
 {"nome":"guardanapo", "local": "angeloni", "preco":"3.59"},
 {"nome":"detergente-maquina-louca", "local": "forte", "preco":"15.90"},
@@ -63,6 +74,27 @@ limpezas = [
 ]
 
 alimentacao = [
+
+{"nome":"salame", "local": "forte", "preco":"5.89"},
+{"nome":"manteiga", "local": "forte", "preco":"6.49"},
+{"nome":"sache-johnny", "local": "forte", "preco":"1.75"},
+{"nome":"queijo mussarela", "local": "forte", "preco":"20.79"},
+{"nome":"suco de uva 1.5L", "local": "forte", "preco":"9.99"},
+{"nome":"passata", "local": "forte", "preco":"5.99"},
+{"nome":"salgadinho cheetos", "local": "forte", "preco":"5.59"},
+{"nome":"creme de leite", "local": "forte", "preco":"1.55"},
+{"nome":"pipoca 500g", "local": "forte", "preco":"2.85"},
+{"nome":"feijao", "local": "forte", "preco":"4.19"},
+{"nome":"leite condensado", "local": "forte", "preco":"4.99"},
+{"nome":"nutella", "local": "forte", "preco":"13.90"},
+{"nome":"salgadinho lays", "local": "forte", "preco":"5.79"},
+{"nome":"macarrao penne 500g", "local": "forte", "preco":"2.39"},
+{"nome":"arroz arboreo 1kg", "local": "forte", "preco":"13.69"},
+{"nome":"arroz multigraos 500g", "local": "forte", "preco":"8.20"},
+{"nome":"macarrao yakissoba", "local": "forte", "preco":"4.19"},
+{"nome":"cafe 500g", "local": "forte", "preco":"10.40"},
+{"nome":"cafe aralto", "local": "forte", "preco":"8.99"},
+{"nome":"arroz", "local": "forte", "preco":"3.85"},
 
 {"nome":"creme-leite", "local": "angeloni", "preco":"1.55"},
 {"nome":"cream-cheese", "local": "bistek", "preco":"3.93"},
@@ -221,107 +253,3 @@ for v in outros:
     print(endpoint + ": " + response.read().decode())
     
 
-
-comprasFort = {
-"perfex": [
-["4.99"],
-],
-"plastico grande com 100": [
-["6.99"],
-],
-"plastico pequeno com 100": [
-["4.99"],
-],
-"papel higienico": [
-["1.07"],
-],
-"arroz": [
-["3.85"],
-],
-"cafe aralto": [
-["8.99"],
-],
-"cafe 500g": [
-["10.40"],
-],
-"macarrao yakissoba": [
-["4.19"],
-],
-"arroz multigraos 500g": [
-["8.20"],
-],
-"arroz arboreo 1kg": [
-["13.69"],
-],
-"macarrao penne 500g": [
-["2.39"],
-],
-"salgadinho lays": [
-["5.79"],
-],
-"nutella": [
-["13.90"],
-],
-"leite condensado": [
-["4.99"],
-],
-"feijao": [
-["4.19"],
-],
-"pipoca 500g": [
-["2.85"],
-],
-"creme de leite": [
-["1.55"],
-],
-"salgadinho cheetos": [
-["5.59"],
-],
-"passata": [
-["5.99"],
-],
-"suco de uva 1.5L": [
-["9.99"],
-],
-"quejo mussarela": [
-["20.79"],
-],
-"sache-johnny": [
-["1.75"],
-],
-"manteiga": [
-["6.49"],
-],
-"salame": [
-["5.89"],
-],
-"alcool": [
-["4.99"],
-],
-"ajax pesado": [
-["4.99"],
-],
-"saco de lixo 30L": [
-["10.90"],
-],
-"pinho sol": [
-["6.89"],
-],
-"lava louca": [
-["15.90"],
-],
-"omo": [
-["17.90"],
-],
-}
-
-for k, v in comprasFort.items():
-    for d in v:
-        l = k.replace(" ", "%20")
-        connection.request('POST', '/produtos/' +  l + '/historico', json.dumps({"preco":d[0], "local":"forte", "obs":""}), headers)
-        response = connection.getresponse()
-        response.read()
-    endpoint = '/produtos/' + l
-    connection.request('GET', endpoint)
-    response = connection.getresponse()
-    print(endpoint + ": " + response.read().decode())
