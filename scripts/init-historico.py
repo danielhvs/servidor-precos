@@ -6,9 +6,10 @@ connection = http.client.HTTPConnection('localhost:3000')
 
 headers = {'Content-type': 'application/json'}
 
-
 higiene = [
     
+{"nome":"sabonete-liquido", "local": "forte", "preco":"5.49"},
+{"nome":"desodorante", "local": "forte", "preco":"10.90"},
 {"nome":"shampoo juju 400ml", "local": "bistek", "preco": "17.97"},
 {"nome":"sabonete Juju", "local": "bistek", "preco": "3.29"},
 {"nome":"espuma barbear", "local": "bistek", "preco": "20"},
@@ -25,7 +26,14 @@ higiene = [
 ]
 
 limpezas = [
-    
+
+{"nome":"guardanapo", "local": "angeloni", "preco":"3.59"},
+{"nome":"detergente-maquina-louca", "local": "forte", "preco":"15.90"},
+{"nome":"detergente", "local": "forte", "preco":"1.49"},
+{"nome":"papel-manteiga", "local": "forte", "preco":"4.99"},
+{"nome":"papel toalha", "local": "bistek", "preco":"3.49"},
+{"nome":"papel toalha", "local": "angeloni", "preco":"4.39"},
+
 {"nome":"glicerina", "local": "bistek", "preco": "6.45"},
 {"nome":"omo", "local": "bistek", "preco": "17.97"},
 {"nome":"limpa vidro", "local": "bistek", "preco": "9.97"},
@@ -55,6 +63,29 @@ limpezas = [
 ]
 
 alimentacao = [
+
+{"nome":"creme-leite", "local": "angeloni", "preco":"1.55"},
+{"nome":"cream-cheese", "local": "bistek", "preco":"3.93"},
+{"nome":"suco-uva-1.5l", "local": "angeloni", "preco":"8.94"},
+{"nome":"banana", "local": "forte", "preco":"2.79"},
+{"nome":"queijo-parmesao", "local": "forte", "preco":"2.98"},
+{"nome":"sal", "local": "forte", "preco":"2.55"},
+{"nome":"arroz", "local": "forte", "preco":"3.55"},
+{"nome":"cafe 500g", "local": "forte", "preco":"10.40"},
+{"nome":"leite", "local": "forte", "preco":"3.19"},
+{"nome":"nutella", "local": "forte", "preco":"14.50"},
+{"nome":"queijo-mussarela", "local": "forte", "preco":"22.90"},
+{"nome":"manteiga", "local": "forte", "preco":"6.89"},
+{"nome":"passata", "local": "forte", "preco":"5.49"},
+{"nome":"acucar-refinado", "local": "forte", "preco":"1.85"},
+{"nome":"salgadinho-lays", "local": "forte", "preco":"5.79"},
+{"nome":"sache-johnny", "local": "forte", "preco":"1.75"},
+{"nome":"sache-johnny", "local": "angeloni", "preco":"1.89"},
+{"nome":"agua-coco", "local": "forte", "preco":"6.89"},
+{"nome":"oleo", "local": "angeloni", "preco":"5.99"},
+{"nome":"azeite", "local": "angeloni", "preco":"15.34"},
+{"nome":"coxao mole", "local": "angeloni", "preco":"21.39"},
+{"nome":"patinho", "local": "angeloni", "preco":"23.59"},
     
 {"nome":"salame", "local": "bistek", "preco": "5.47"},
 {"nome":"file de peito de frango", "local": "bistek", "preco": "9.97"},
@@ -68,7 +99,6 @@ alimentacao = [
 {"nome":"leite", "local": "bistek", "preco": "2.97"},
 {"nome":"farelo de aveia 200g", "local": "bistek", "preco": "6.75"},
 {"nome":"batata palha", "local": "bistek", "preco": "2.99"},
-
 
 {"nome": "biscoito zooreta", "local": "bistek", "preco": "1.79"},
 {"nome": "sobrecoxa", "local": "bistek", "preco": "6.97"},
@@ -189,106 +219,7 @@ for v in outros:
     connection.request('GET', endpoint)
     response = connection.getresponse()
     print(endpoint + ": " + response.read().decode())
-
-produtos = {
-"patinho": [
-["23.59", "angeloni"],
-],
-"coxao mole": [
-["21.39", "angeloni"],
-],
-"azeite": [
-["15.34", "angeloni"],
-],
-"oleo": [
-["5.99", "angeloni"],
-],
-"salgadinho-lays": [
-["5.79", "forte"],
-],
-"acucar-refinado": [
-["1.85", "forte"],
-],
-"papel-manteiga": [
-["4.99", "forte"],
-],
-"passata": [
-["5.49", "forte"],
-],
-"manteiga": [
-["6.89", "forte"],
-],
-"queijo-mussarela": [
-["22.90", "forte"],
-],
-"desodorante": [
-["10.90", "forte"],
-],
-"sabonete-liquido": [
-["5.49", "forte"],
-],
-"agua-coco": [
-["6.89", "forte"],
-],
-"sache-johnny": [
-["1.75", "forte"],
-["1.89", "angeloni"],
-],
-"detergente": [
-["1.49", "forte"],
-],
-"detergente-maquina-louca": [
-["15.90", "forte"],
-],
-"nutella": [
-["14.50", "forte"],
-],
-"leite": [
-["3.19", "forte"],
-],
-"cafe 500g": [
-["10.40", "forte"],
-],
-"arroz": [
-["3.55", "forte"],
-],
-"sal": [
-["2.55", "forte"],
-],
-"queijo-parmesao": [
-["2.98", "forte"],
-],
-"banana": [
-["2.79", "forte"],
-],
-"suco-uva-1.5l": [
-["8.94", "angeloni"]
-],
-"guardanapo": [
-["3.59", "angeloni"]
-],
-"cream-cheese": [
-["3.93", "bistek"]
-],
-"creme-leite": [
-["1.55", "forte"]
-],
-"papel-toalha": [
-["3.49", "bistek"],
-["4.39", "angeloni"]
-]
-}
-
-for k, v in produtos.items():
-    for d in v:
-        l = k.replace(" ", "%20")
-        connection.request('POST', '/produtos/' + l + '/historico', json.dumps({"preco":d[0], "local":d[1], "obs":""}), headers)
-        response = connection.getresponse()
-        response.read()
-    endpoint = '/produtos/' + k
-    connection.request('GET', endpoint)
-    response = connection.getresponse()
-    print(endpoint + ": " + response.read().decode())
+    
 
 
 comprasFort = {
