@@ -8,6 +8,8 @@ headers = {'Content-type': 'application/json'}
 
 higiene = [
     
+{"nome": "lenco umedecido", "local": "forte", "preco": "9.99"},
+{"nome": "lenco umedecido", "local": "bistek", "preco": "8.22"},
 {"nome":"papel higienico", "local": "forte", "preco":"1.07"},
 {"nome":"sabonete-liquido", "local": "forte", "preco":"5.49"},
 {"nome":"desodorante", "local": "forte", "preco":"10.90"},
@@ -57,7 +59,6 @@ limpeza = [
 {"nome": "papel-toalha", "local": "bistek", "preco": "3.55"},
 {"nome": "alcool-gel", "local": "bistek", "preco": "11.99"},
 {"nome": "saco-lixo", "local": "bistek", "preco": "9.9"},
-{"nome": "pano umedecido", "local": "bistek", "preco": "8.22"},
 {"nome": "papel toalha", "local": "bistek", "preco": "3.49"},
 
 {"nome": "plastico pequeno com 100", "local": "forte", "preco": "5.59"},
@@ -178,7 +179,6 @@ alimentacao = [
 
 {"nome": "suco uva 1.5L", "local": "forte", "preco": "9.90"},
 {"nome": "alho", "local": "forte", "preco": "38.90"},
-{"nome": "lenco umedecido", "local": "forte", "preco": "9.99"},
 {"nome": "detergente", "local": "forte", "preco": "1.45"},
 {"nome": "sabonete liquido", "local": "forte", "preco": "5.99"},
 {"nome": "sal", "local": "forte", "preco": "3.29"},
