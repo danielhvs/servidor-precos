@@ -7,12 +7,12 @@ connection = http.client.HTTPConnection('localhost:3000')
 headers = {'Content-type': 'application/json'}
 
 produtos = [
-["sobrecoxa", "Marca NAT é ruim"],
-["calabresa", "Marca SADIA e SEARA são boas"]
+["sobrecoxa", "Marca NAT é ruim","alimentacao"],
+["calabresa", "Marca SADIA e SEARA são boas","alimentacao"]
 ]
 
 for p in produtos:
-    connection.request('POST', '/produtos/' + p[0] + '/sumario', json.dumps({"sumario":p[1]}), headers)
+    connection.request('POST', '/produtos/' + p[0] + '/sumario', json.dumps({"sumario":p[1], "categoria":p[2]}), headers)
     response = connection.getresponse()
     response.read()
     endpoint = '/produtos/' + p[0]

@@ -107,14 +107,14 @@
     (do
       (if (tem-sumario nome)
         (insere-sumario nome payload)
-        (insert {:nome nome :sumario (:sumario payload)}))
+        (insert {:nome nome :sumario (:sumario payload) :categoria (:categoria payload)}))
       {:status 200
        :headers {"Access-Control-Allow-Origin" "*"}})))
 
 (defn insere-historico [nome payload]
   (let [item (first (db-consulta-produto {:nome nome}))
         historico (:historico item)
-        novo-historico (conj historico payload)
+        novo-historico (conj historico (dissoc payload :categoria))
         melhor-preco (apply min (map :preco novo-historico))
         novo-item (assoc (assoc item :melhor-preco (min melhor-preco (:preco payload))) :historico novo-historico)
         x (println (str "novo-item " novo-item))
@@ -126,7 +126,7 @@
     (do
       (if (tem-sumario nome)
         (insere-historico nome payload)
-        (do (insere-sumario nome {:sumario ""})
+        (do (insere-sumario nome {:sumario "" :categoria (:categoria payload)})
             (insere-historico nome payload)))
       {:status 200
        :headers {"Access-Control-Allow-Origin" "*"}})))
