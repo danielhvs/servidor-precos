@@ -26,7 +26,7 @@ higiene = [
 
 ]
 
-limpezas = [
+limpeza = [
 
 {"nome":"omo", "local": "forte", "preco":"17.90"},
 {"nome":"lava louca", "local": "forte", "preco":"15.90"},
@@ -51,7 +51,7 @@ limpezas = [
 {"nome":"ajax pesado", "local": "bistek", "preco": "5.35"},
 {"nome":"detergente", "local": "bistek", "preco": "1.85"},
 {"nome":"kiboa", "local": "bistek", "preco": "3.79"},
-{"nome": "papel-higienico", "local": "bistek", "preco": "19.90"}
+{"nome": "papel-higienico", "local": "bistek", "preco": "19.90"},
 {"nome": "ajax", "local": "bistek", "preco": "2.97"},
 {"nome": "detergente", "local": "bistek", "preco": "1.85"},
 {"nome": "papel-toalha", "local": "bistek", "preco": "3.55"},
