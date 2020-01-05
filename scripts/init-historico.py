@@ -7,6 +7,11 @@ connection = http.client.HTTPConnection('localhost:3000')
 headers = {'Content-type': 'application/json'}
 
 higiene = [
+
+{"nome":"shampoo", "local": "forte", "preco":"6.99"},
+{"nome":"gillete", "local": "forte", "preco":"4.83"},
+
+{"nome":"desodorante", "local": "brasil", "preco":"10.69"},
     
 {"nome": "lenco umedecido", "local": "forte", "preco": "9.99"},
 {"nome": "lenco umedecido", "local": "bistek", "preco": "8.22"},
@@ -30,8 +35,16 @@ higiene = [
 
 limpeza = [
 
+{"nome":"detergente-maquina-louca", "local": "forte", "preco":"15.90"},
+{"nome":"omo", "local": "forte", "preco":"12.90"},
+{"nome":"sabonete-liquido", "local": "forte", "preco":"5.99"},
+{"nome":"ajax pesado", "local": "forte", "preco":"4.99"},
+
+{"nome":"glicerina", "local": "brasil", "preco":"5.59"},
+{"nome":"alcool", "local": "brasil", "preco":"5.49"},
+
 {"nome":"omo", "local": "forte", "preco":"17.90"},
-{"nome":"lava louca", "local": "forte", "preco":"15.90"},
+{"nome":"detergente-maquina-louca", "local": "forte", "preco":"15.90"},
 {"nome":"pinho sol", "local": "forte", "preco":"6.89"},
 {"nome":"saco de lixo 30L", "local": "forte", "preco":"10.90"},
 {"nome":"ajax pesado", "local": "forte", "preco":"4.99"},
@@ -75,6 +88,25 @@ limpeza = [
 ]
 
 alimentacao = [
+
+{"nome":"file de peito de frango", "local": "forte", "preco": "12.97"},
+{"nome":"queijo-mussarela", "local": "forte", "preco":"23.90"},
+{"nome":"manteiga", "local": "forte", "preco":"5.99"},
+{"nome":"queijo-gorgonzola", "local": "forte", "preco":"44.99"},
+{"nome":"salame", "local": "forte", "preco":"5.89"},
+{"nome":"queijo-parmesao", "local": "forte", "preco":"2.98"},
+{"nome":"oleo", "local": "forte", "preco":"4.98"},
+{"nome":"passata", "local": "forte", "preco":"5.49"},
+{"nome":"azeite", "local": "forte", "preco":"16.90"},
+{"nome":"salgadinho", "local": "forte", "preco":"5.90"},
+{"nome":"milho-pipoca", "local": "forte", "preco":"2.85"},
+{"nome":"arroz", "local": "forte", "preco":"4.19"},
+{"nome":"cafe aralto", "local": "forte", "preco":"8.99"},
+
+{"nome":"leite-ninho", "local": "brasil", "preco":"9.90"},
+{"nome":"feijao", "local": "brasil", "preco":"4.39"},
+{"nome":"essencia-baunilha", "local": "brasil", "preco":"6.99"},
+{"nome":"leite", "local": "brasil", "preco":"3.29"},
 
 {"nome":"salame", "local": "forte", "preco":"5.89"},
 {"nome":"manteiga", "local": "forte", "preco":"6.49"},
@@ -207,11 +239,6 @@ alimentacao = [
 
 ]
 
-outros = [
-{"nome": "colher-cozinha", "local": "bistek", "preco": "23.90"},
-{"nome": "faca", "local": "bistek", "preco": "4.79"},
-]
-
 for v in limpeza:
     l = v['nome'].replace(" ", "%20")
     connection.request('POST', '/produtos/' +  l + '/historico', json.dumps({"preco":v['preco'], "local":v['local'], "obs":"", "categoria":"limpeza"}), headers)
@@ -241,15 +268,4 @@ for v in higiene:
     connection.request('GET', endpoint)
     response = connection.getresponse()
     print(endpoint + ": " + response.read().decode())
-
-for v in outros:
-    l = v['nome'].replace(" ", "%20")
-    connection.request('POST', '/produtos/' +  l + '/historico', json.dumps({"preco":v['preco'], "local":v['local'], "obs":"", "categoria":"outros"}), headers)
-    response = connection.getresponse()
-    response.read()
-    endpoint = '/produtos/' + l
-    connection.request('GET', endpoint)
-    response = connection.getresponse()
-    print(endpoint + ": " + response.read().decode())
-    
 
