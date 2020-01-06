@@ -8,7 +8,9 @@ headers = {'Content-type': 'application/json'}
 
 produtos = [
 ["sobrecoxa", "Marca NAT é ruim","alimentacao"],
-["calabresa", "Marca SADIA e SEARA são boas","alimentacao"]
+["calabresa", "Marca SADIA e SEARA são boas","alimentacao"],
+["queijo-gorgonzola", "Marca Gran Mestri é boa","alimentacao"],
+["queijo-mussarela", "Marca Casa do Pao de Queijo é boa","alimentacao"]
 ]
 
 for p in produtos:
